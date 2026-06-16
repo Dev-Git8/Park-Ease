@@ -7,7 +7,7 @@
 
 ---
 
-**Park-Ease** is a scalable, real-time parking management platform built with modern web technologies. It features robust, database-backed session management, live slot synchronization via WebSockets, role-based access control, and a type-safe data layer using Prisma ORM.
+**Park-Ease** is a scalable and Best real-time parking management platform built with modern web technologies. It features robust, database-backed session management, live slot synchronization via WebSockets, role-based access control, and a type-safe data layer using Prisma ORM, Redis for caching the mostly used pages to make the system more efficient and fast.
 
 ## 🚀 Key Features
 
