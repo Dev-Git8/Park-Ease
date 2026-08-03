@@ -7,7 +7,7 @@ export default {
     theme: {
       extend: {
         fontFamily: {
-          sans: ['Inter', 'sans-serif'],
+          sans: ['Onest', 'Inter', 'sans-serif'],
           outfit: ['Outfit', 'sans-serif'],
         },
         colors: {
@@ -22,7 +22,24 @@ export default {
           primary: {
             DEFAULT: '#facc15',
             dark: '#eab308',
-          }
+          },
+          navy: {
+            DEFAULT: '#2563c9',
+            deep: '#0f2f63',
+            light: '#5790e6',
+          },
+          harbor: '#0b6e97',
+          surface: {
+            DEFAULT: '#f4f4f4',
+            card: '#ffffff',
+          },
+          ink: {
+            DEFAULT: '#0a0a0a',
+            soft: '#717784',
+          },
+          ghost: '#d7dae1',
+          hairline: '#e6e8ec',
+          background: '#ffffff',
         },
         boxShadow: {
           'premium': '0 10px 30px -10px rgba(0, 0, 0, 0.08)',
@@ -32,6 +49,9 @@ export default {
         borderRadius: {
           '3xl': '1.5rem',
           '4xl': '2rem',
+          card: '1.5rem',
+          'card-lg': '2rem',
+          pill: '62.5rem',
         }
       },
     },

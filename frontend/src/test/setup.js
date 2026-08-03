@@ -27,7 +27,6 @@ class MockIntersectionObserver {
 
 if (typeof window.IntersectionObserver === 'undefined') {
     window.IntersectionObserver = MockIntersectionObserver;
-    global.IntersectionObserver = MockIntersectionObserver;
 }
 
 if (typeof window.matchMedia !== 'function') {
