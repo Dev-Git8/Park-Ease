@@ -24,7 +24,7 @@ const About = () => {
                             <span className="text-brand-accent">Mobility.</span>
                         </h1>
                         <p className="text-xl text-slate-500 font-medium leading-relaxed mb-12 max-w-2xl">
-                            We are building the world's most advanced parking infrastructure management system, connecting drivers with premium locations through a seamless, high-performance network.
+                            We are building the world&apos;s most advanced parking infrastructure management system, connecting drivers with premium locations through a seamless, high-performance network.
                         </p>
                         <div className="flex space-x-4">
                             <Button size="lg" className="rounded-2xl px-10">Our Vision</Button>

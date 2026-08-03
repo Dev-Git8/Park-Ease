@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
                     setUser(data.user);
                     localStorage.setItem('user', JSON.stringify(data.user));
                 }
-            } catch (error) {
+            } catch {
                 console.log('No active session found.');
                 setUser(null);
                 localStorage.removeItem('user');
@@ -81,5 +81,6 @@ export const AuthProvider = ({ children }) => {
     );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components -- consumer hook co-located with its provider, standard React context pattern
 export const useAuth = () => useContext(AuthContext);
 

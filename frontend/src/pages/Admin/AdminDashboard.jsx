@@ -18,7 +18,7 @@ import {
     ArrowUpRight,
     Search as SearchIcon
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
@@ -60,7 +60,7 @@ const AdminDashboard = () => {
         try {
             await api.put(`/admin/businesses/${id}/status`, { status });
             fetchData();
-        } catch (error) {
+        } catch {
             alert('Failed to update status');
         }
     };

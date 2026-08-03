@@ -315,7 +315,7 @@ const BusinessDetails = () => {
                                  <Info className="text-brand-yellow flex-shrink-0" size={16} />
                              </div>
                              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-relaxed">
-                                 Booking is final. Cancellation is subject to the location's policy and space availability.
+                                 Booking is final. Cancellation is subject to the location&apos;s policy and space availability.
                              </p>
                         </div>
                     </div>

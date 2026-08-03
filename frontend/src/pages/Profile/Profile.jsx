@@ -102,7 +102,7 @@ const Profile = () => {
                                </div>
                           ) : (
                                <div className="space-y-6">
-                                    {bookings.map((booking, i) => (
+                                    {bookings.map((booking) => (
                                          <motion.div 
                                             key={booking.id}
                                             className="group bg-white dark:bg-brand-dark-card p-4 rounded-[2.5rem] border border-slate-50 dark:border-brand-dark-card shadow-sm hover:shadow-premium-hover transition-all duration-500 flex flex-col md:flex-row md:items-center gap-8"

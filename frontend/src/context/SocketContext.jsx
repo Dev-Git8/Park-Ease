@@ -3,6 +3,7 @@ import { io } from 'socket.io-client';
 
 const SocketContext = createContext();
 
+// eslint-disable-next-line react-refresh/only-export-components -- consumer hook co-located with its provider, standard React context pattern
 export const useSocket = () => {
     return useContext(SocketContext);
 };
@@ -16,6 +17,7 @@ export const SocketProvider = ({ children }) => {
             withCredentials: true,
         });
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- subscribing to an external system (the socket.io client) and storing its handle
         setSocket(newSocket);
 
         return () => newSocket.close();
