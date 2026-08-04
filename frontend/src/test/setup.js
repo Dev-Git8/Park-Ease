@@ -47,3 +47,7 @@ if (typeof window.requestAnimationFrame !== 'function') {
     window.requestAnimationFrame = (callback) => window.setTimeout(() => callback(Date.now()), 16);
     window.cancelAnimationFrame = (id) => window.clearTimeout(id);
 }
+
+// jsdom doesn't implement scrollTo/scrollIntoView; App.jsx and Home.jsx call them directly.
+window.scrollTo = () => {};
+window.HTMLElement.prototype.scrollIntoView = window.HTMLElement.prototype.scrollIntoView || (() => {});

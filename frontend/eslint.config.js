@@ -34,4 +34,11 @@ export default defineConfig([
       'react/prop-types': 'off',
     },
   },
+  {
+    // Test files run under Vitest/Node, not the browser, and legitimately use Node globals (process, node:fs, etc.)
+    files: ['**/*.test.{js,jsx}', 'src/test/**/*.{js,jsx}'],
+    languageOptions: {
+      globals: { ...globals.browser, ...globals.node },
+    },
+  },
 ])

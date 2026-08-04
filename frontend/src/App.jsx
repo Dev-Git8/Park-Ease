@@ -1,9 +1,14 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { SocketProvider } from './context/SocketContext';
-import Navbar from './components/Navbar';
+import { SiteUIProvider, useSiteUI } from './context/SiteUIContext';
+import Header from './components/layout/Header';
+import Footer from './components/layout/Footer';
+import MobileMenu from './components/layout/MobileMenu';
+import IntroLoader from './components/overlays/IntroLoader';
+import ContactModal from './components/overlays/ContactModal';
 import Home from './pages/Home/Home';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
@@ -21,7 +26,7 @@ const ProtectedRoute = ({ children, roles }) => {
 
     if (loading) return (
         <div className="min-h-screen flex items-center justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-navy"></div>
         </div>
     );
 
@@ -34,10 +39,17 @@ const ProtectedRoute = ({ children, roles }) => {
     return children;
 };
 
-function AppContent() {
+const AppContent = () => {
+    const { markReady } = useSiteUI();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     return (
-        <div className="min-h-screen bg-slate-50">
-            <Navbar />
+        <main className="w-full overflow-x-clip bg-white p-2 sm:p-3">
+            <IntroLoader onReady={markReady} />
+            <Header />
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
@@ -45,7 +57,7 @@ function AppContent() {
                 <Route path="/business/:id" element={<BusinessDetails />} />
                 <Route path="/booking-success" element={<BookingSuccess />} />
                 <Route path="/about" element={<About />} />
-                
+
                 {/* Customer Routes */}
                 <Route path="/profile" element={
                     <ProtectedRoute roles={['customer']}>
@@ -72,18 +84,23 @@ function AppContent() {
                     </ProtectedRoute>
                 } />
             </Routes>
-        </div>
+            <Footer />
+            <MobileMenu />
+            <ContactModal />
+        </main>
     );
-}
+};
 
 function App() {
     return (
         <ThemeProvider>
             <AuthProvider>
                 <SocketProvider>
-                    <Router>
-                        <AppContent />
-                    </Router>
+                    <SiteUIProvider>
+                        <Router>
+                            <AppContent />
+                        </Router>
+                    </SiteUIProvider>
                 </SocketProvider>
             </AuthProvider>
         </ThemeProvider>
