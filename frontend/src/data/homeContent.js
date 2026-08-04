@@ -1,5 +1,7 @@
 export const HERO_CONTENT = {
-    titleWords: ['Find', 'Your', 'Perfect', 'Spot'],
+    // Kept to 3 words: at the reference's 12.5vw whitespace-nowrap treatment, a
+    // 4th word ("Perfect") ran the line past the viewport edge on common desktop widths.
+    titleWords: ['Find', 'Your', 'Spot'],
     taglineLines: ['Park Smart,', 'Drive More'],
 };
 

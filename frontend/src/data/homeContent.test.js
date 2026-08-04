@@ -27,8 +27,8 @@ describe('data/images.js', () => {
 });
 
 describe('data/homeContent.js', () => {
-    it('has a 4-word hero title and a 2-line tagline', () => {
-        expect(HERO_CONTENT.titleWords).toHaveLength(4);
+    it('has a 3-word hero title and a 2-line tagline', () => {
+        expect(HERO_CONTENT.titleWords).toHaveLength(3);
         expect(HERO_CONTENT.taglineLines).toHaveLength(2);
     });
 

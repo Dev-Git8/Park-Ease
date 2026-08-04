@@ -17,7 +17,7 @@ describe('Hero', () => {
     it('renders the hero title words and stat card', () => {
         render(<Hero businesses={businesses} searchTerm="" onSearchTermChange={() => {}} onSearch={() => {}} ready />);
         expect(screen.getByText(/Find/)).toBeInTheDocument();
-        expect(screen.getByText(/Perfect/)).toBeInTheDocument();
+        expect(screen.getByText(/Spot/)).toBeInTheDocument();
         expect(screen.getByText('12K+')).toBeInTheDocument();
     });
 

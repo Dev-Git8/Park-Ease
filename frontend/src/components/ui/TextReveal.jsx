@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components -- easing constants are shared by every component that uses TextReveal, and belong next to it for discoverability */
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 
 export const EASE_OUT_EXPO = [0.16, 1, 0.3, 1];
 export const EASE_OUT_QUART = [0.25, 1, 0.5, 1];
@@ -33,7 +33,7 @@ const TextReveal = ({
         // contentKey re-fires the reveal whenever the active text changes (carousels).
     }, [play, contentKey]);
 
-    const renderSegment = (segment, i) => (
+    const renderAnimatedText = (segment, i) => (
         <span
             className={`inline-block ${segmentClassName}`}
             style={{
@@ -46,17 +46,23 @@ const TextReveal = ({
             }}
         >
             {segment}
-            {mode === 'words' && i < segments.length - 1 ? ' ' : ''}
         </span>
     );
+
+    // The inter-word space is a plain text node OUTSIDE each word's inline-block
+    // wrapper (a sibling, not trailing content inside it). A space placed inside
+    // an inline-block gets trimmed as end-of-line whitespace within that box's
+    // own formatting context, which silently ran every word together.
+    const renderWordSpacer = (i) => (mode === 'words' && i < segments.length - 1 ? ' ' : '');
 
     if (!clip) {
         return (
             <Tag className={className}>
                 {segments.map((segment, i) => (
-                    <span key={`${segment}-${i}`} className={mode === 'lines' ? 'block' : 'inline-block'}>
-                        {renderSegment(segment, i)}
-                    </span>
+                    <Fragment key={`${segment}-${i}`}>
+                        <span className={mode === 'lines' ? 'block' : 'inline-block'}>{renderAnimatedText(segment, i)}</span>
+                        {renderWordSpacer(i)}
+                    </Fragment>
                 ))}
             </Tag>
         );
@@ -67,9 +73,12 @@ const TextReveal = ({
     return (
         <Tag className={className}>
             {segments.map((segment, i) => (
-                <span key={`${segment}-${i}`} className={`overflow-hidden ${clipPadding} ${mode === 'lines' ? 'block' : 'inline-block'}`}>
-                    {renderSegment(segment, i)}
-                </span>
+                <Fragment key={`${segment}-${i}`}>
+                    <span className={`overflow-hidden ${clipPadding} ${mode === 'lines' ? 'block' : 'inline-block'}`}>
+                        {renderAnimatedText(segment, i)}
+                    </span>
+                    {renderWordSpacer(i)}
+                </Fragment>
             ))}
         </Tag>
     );
