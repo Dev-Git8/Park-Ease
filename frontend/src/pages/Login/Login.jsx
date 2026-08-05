@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Mail, Lock, ArrowRight, ShieldCheck, Car } from 'lucide-react';
+import { Mail, Lock, ArrowRight, Car } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
@@ -10,7 +10,7 @@ const Login = () => {
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    
+
     const { login } = useAuth();
     const navigate = useNavigate();
 
@@ -28,56 +28,52 @@ const Login = () => {
             else if (user.role === 'business') navigate('/dashboard');
             else navigate('/');
         } catch (err) {
-            setError(err.response?.data?.message || 'Authentication failed. Please check your credentials.');
+            setError(err.response?.data?.message || "We couldn't sign you in. Check your email and password.");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-6 bg-brand-light-bg dark:bg-brand-dark transition-colors duration-300 relative overflow-hidden">
-            {/* Background Aesthetics */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-brand-yellow/10 blur-[100px] -mr-48 -mt-48 rounded-full"></div>
-            <div className="absolute bottom-0 left-0 w-96 h-96 bg-brand-yellow/5 blur-[120px] -ml-48 -mb-48 rounded-full"></div>
-            
-            <motion.div 
+        <div className="flex min-h-screen items-center justify-center bg-surface p-6">
+            <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="max-w-md w-full relative z-10"
+                className="w-full max-w-md"
             >
-                <div className="text-center mb-10">
-                     <div className="w-16 h-16 bg-brand-yellow rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-yellow">
-                         <Car className="w-10 h-10 text-brand-black" strokeWidth={3} />
-                     </div>
-                     <h2 className="text-4xl font-black text-brand-black dark:text-white tracking-tighter uppercase mb-2">Login</h2>
-                     <p className="text-slate-400 font-bold uppercase tracking-[0.3em] text-[10px]">Secure Access Protocol</p>
+                <div className="mb-10 text-center">
+                    <div className="mx-auto mb-6 grid h-16 w-16 place-items-center rounded-card bg-navy">
+                        <Car className="h-8 w-8 text-white" aria-hidden="true" />
+                    </div>
+                    <h1 className="font-outfit text-4xl font-medium tracking-tight text-ink">Welcome back</h1>
+                    <p className="mt-2 text-sm text-ink-soft">Sign in to manage your bookings</p>
                 </div>
 
-                <div className="bg-white dark:bg-brand-dark-card rounded-[2.5rem] p-10 lg:p-12 shadow-premium border border-slate-50 dark:border-brand-dark-card transition-colors">
+                <div className="rounded-card-lg border border-hairline bg-white p-8 shadow-sm sm:p-10">
                     {error && (
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="bg-red-50 dark:bg-red-500/10 border border-red-100 dark:border-red-500/20 text-red-600 dark:text-red-400 px-6 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest mb-8 text-center"
+                            className="mb-6 rounded-2xl border border-red-100 bg-red-50 px-5 py-3 text-center text-sm text-red-600"
                         >
                             {error}
                         </motion.div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="space-y-8">
-                        <Input 
-                            label="Operational Identity"
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <Input
+                            label="Email"
                             name="email"
-                            type="email" 
+                            type="email"
                             required
                             icon={Mail}
                             value={formData.email}
                             onChange={handleChange}
-                            placeholder="name@domain.com"
+                            placeholder="you@email.com"
                         />
 
-                        <Input 
-                            label="Secure Access Key"
+                        <Input
+                            label="Password"
                             name="password"
                             type="password"
                             required
@@ -87,36 +83,22 @@ const Login = () => {
                             placeholder="••••••••"
                         />
 
-                        <Button 
-                            type="submit" 
-                            disabled={loading}
-                            className="w-full py-5 rounded-[1.25rem] shadow-yellow"
-                            size="lg"
-                        >
+                        <Button type="submit" disabled={loading} className="w-full" size="lg">
                             {loading ? (
-                                <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-brand-black"></div>
+                                <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
                             ) : (
                                 <>
-                                    <span>Authenticate</span>
-                                    <ArrowRight className="w-5 h-5 ml-4" />
+                                    <span>Sign in</span>
+                                    <ArrowRight className="ml-3 h-4 w-4" aria-hidden="true" />
                                 </>
                             )}
                         </Button>
                     </form>
 
-                    <div className="mt-10 pt-8 border-t border-slate-50 dark:border-brand-dark-card text-center">
-                        <p className="text-slate-400 dark:text-slate-500 font-bold text-[10px] uppercase tracking-widest">
-                            New to the network?
-                            <Link to="/register" className="text-brand-yellow font-black ml-2 hover:underline">
-                                Request Access
-                            </Link>
-                        </p>
-                    </div>
-                </div>
-                
-                <div className="mt-10 flex items-center justify-center space-x-3 text-slate-300 dark:text-slate-700">
-                     <ShieldCheck className="w-5 h-5" />
-                     <span className="text-[10px] font-black uppercase tracking-[0.4em]">Verified Infrastructure</span>
+                    <p className="mt-8 text-center text-sm text-ink-soft">
+                        New to ParkEase?
+                        <Link to="/register" className="ml-2 font-medium text-navy hover:underline">Create an account</Link>
+                    </p>
                 </div>
             </motion.div>
         </div>
