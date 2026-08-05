@@ -5,11 +5,9 @@ import { MemoryRouter } from 'react-router-dom';
 import Header from './Header';
 
 const mockAuth = { user: null, logout: vi.fn() };
-const mockTheme = { theme: 'light', toggleTheme: vi.fn() };
 const mockSiteUI = { openMenu: vi.fn(), openContact: vi.fn() };
 
 vi.mock('../../context/AuthContext', () => ({ useAuth: () => mockAuth }));
-vi.mock('../../context/ThemeContext', () => ({ useTheme: () => mockTheme }));
 vi.mock('../../context/SiteUIContext', () => ({ useSiteUI: () => mockSiteUI }));
 
 const renderHeader = (path = '/') =>

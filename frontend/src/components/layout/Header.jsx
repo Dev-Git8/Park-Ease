@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Car, LogOut, Menu, Moon, Sun, User } from 'lucide-react';
+import { Car, LogOut, Menu, User } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { useTheme } from '../../context/ThemeContext';
 import { useSiteUI } from '../../context/SiteUIContext';
 import { NAV_LINKS } from '../../data/homeContent';
 
 const Header = () => {
     const { user, logout } = useAuth();
-    const { theme, toggleTheme } = useTheme();
     const { openMenu, openContact } = useSiteUI();
     const location = useLocation();
     const [scrolled, setScrolled] = useState(false);
@@ -46,15 +44,6 @@ const Header = () => {
             </Link>
 
             <div className="flex flex-1 items-center justify-end gap-4">
-                <button
-                    type="button"
-                    onClick={toggleTheme}
-                    aria-label="Toggle theme"
-                    className="hidden h-10 w-10 place-items-center rounded-pill bg-white/15 backdrop-blur transition-colors hover:bg-white/25 sm:grid"
-                >
-                    {theme === 'light' ? <Moon className="h-4 w-4" aria-hidden="true" /> : <Sun className="h-4 w-4" aria-hidden="true" />}
-                </button>
-
                 <button
                     type="button"
                     onClick={openContact}

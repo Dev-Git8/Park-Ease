@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { ThemeProvider } from './context/ThemeContext';
 import { SocketProvider } from './context/SocketContext';
 import { SiteUIProvider, useSiteUI } from './context/SiteUIContext';
 import Header from './components/layout/Header';
@@ -93,17 +92,15 @@ const AppContent = () => {
 
 function App() {
     return (
-        <ThemeProvider>
-            <AuthProvider>
-                <SocketProvider>
-                    <SiteUIProvider>
-                        <Router>
-                            <AppContent />
-                        </Router>
-                    </SiteUIProvider>
-                </SocketProvider>
-            </AuthProvider>
-        </ThemeProvider>
+        <AuthProvider>
+            <SocketProvider>
+                <SiteUIProvider>
+                    <Router>
+                        <AppContent />
+                    </Router>
+                </SiteUIProvider>
+            </SocketProvider>
+        </AuthProvider>
     );
 }
 
