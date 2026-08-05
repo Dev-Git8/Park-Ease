@@ -48,4 +48,25 @@ describe('Header', () => {
         await userEvent.click(screen.getByText('List Your Lot'));
         expect(mockSiteUI.openContact).toHaveBeenCalledTimes(1);
     });
+
+    it('shows a role-based dashboard label for a business owner', () => {
+        mockAuth.user = { name: 'Jamie Fox', role: 'business' };
+        renderHeader();
+        expect(screen.getByText('Dashboard')).toBeInTheDocument();
+        mockAuth.user = null;
+    });
+
+    it('shows My Bookings for a customer', () => {
+        mockAuth.user = { name: 'Jamie Fox', role: 'customer' };
+        renderHeader();
+        expect(screen.getByText('My Bookings')).toBeInTheDocument();
+        mockAuth.user = null;
+    });
+
+    it('shows a labeled Log out button when logged in', () => {
+        mockAuth.user = { name: 'Jamie Fox', role: 'customer' };
+        renderHeader();
+        expect(screen.getByRole('button', { name: /log out/i })).toBeInTheDocument();
+        mockAuth.user = null;
+    });
 });

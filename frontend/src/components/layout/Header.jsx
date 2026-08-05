@@ -5,6 +5,9 @@ import { useAuth } from '../../context/AuthContext';
 import { useSiteUI } from '../../context/SiteUIContext';
 import { NAV_LINKS } from '../../data/homeContent';
 
+const DASHBOARD_LABEL = { admin: 'Dashboard', business: 'Dashboard', customer: 'My Bookings' };
+const DASHBOARD_PATH = { admin: '/admin', business: '/dashboard', customer: '/profile' };
+
 const Header = () => {
     const { user, logout } = useAuth();
     const { openMenu, openContact } = useSiteUI();
@@ -27,7 +30,7 @@ const Header = () => {
                 transparent ? 'bg-transparent text-white' : 'bg-navy-deep text-white shadow-md'
             }`}
         >
-            <nav className="hidden flex-1 items-center gap-8 lg:flex">
+            <nav className="hidden flex-1 items-center gap-8 md:flex">
                 {NAV_LINKS.map((link) => (
                     <a key={link.name} href={link.href} className="uppercase tracking-widest text-white/90 transition-colors hover:text-white">
                         {link.name}
@@ -47,28 +50,33 @@ const Header = () => {
                 <button
                     type="button"
                     onClick={openContact}
-                    className="hidden text-[11px] font-medium uppercase tracking-widest underline-offset-4 hover:underline sm:inline"
+                    className="hidden text-[11px] font-medium uppercase tracking-widest underline-offset-4 hover:underline md:inline"
                 >
                     List Your Lot
                 </button>
 
                 {user ? (
-                    <Link
-                        to={user.role === 'admin' ? '/admin' : user.role === 'business' ? '/dashboard' : '/profile'}
-                        className="hidden items-center gap-2 sm:flex"
-                    >
+                    <Link to={DASHBOARD_PATH[user.role] ?? '/profile'} className="hidden items-center gap-2 md:flex">
                         <User className="h-4 w-4" aria-hidden="true" />
-                        <span className="text-[11px] font-medium uppercase tracking-widest">{user.name}</span>
+                        <span className="flex flex-col text-left leading-tight">
+                            <span className="text-[11px] font-medium uppercase tracking-widest">{user.name}</span>
+                            <span className="text-[9px] uppercase tracking-widest text-white/60">{DASHBOARD_LABEL[user.role] ?? 'My Bookings'}</span>
+                        </span>
                     </Link>
                 ) : (
-                    <Link to="/login" className="hidden text-[11px] font-medium uppercase tracking-widest underline-offset-4 hover:underline sm:inline">
+                    <Link to="/login" className="hidden text-[11px] font-medium uppercase tracking-widest underline-offset-4 hover:underline md:inline">
                         Sign In
                     </Link>
                 )}
 
                 {user && (
-                    <button type="button" onClick={logout} aria-label="Log out" className="hidden sm:inline-flex">
+                    <button
+                        type="button"
+                        onClick={logout}
+                        className="hidden items-center gap-2 text-[11px] font-medium uppercase tracking-widest hover:text-white/80 md:inline-flex"
+                    >
                         <LogOut className="h-4 w-4" aria-hidden="true" />
+                        Log out
                     </button>
                 )}
 
