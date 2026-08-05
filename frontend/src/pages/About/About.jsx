@@ -1,110 +1,92 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Shield, Target, Zap, Users, Car, MapPin } from 'lucide-react';
+import { Shield, Zap, Users, Car, MapPin } from 'lucide-react';
 import Button from '../../components/ui/Button';
+import Eyebrow from '../../components/ui/Eyebrow';
 
 const About = () => {
     return (
         <div className="min-h-screen bg-white">
-            {/* Hero Section */}
-            <section className="relative py-24 md:py-32 overflow-hidden">
-                <div className="absolute top-0 right-0 w-1/2 h-full bg-slate-50/50 -skew-x-12 translate-x-1/4"></div>
-                <div className="max-w-7xl mx-auto px-6 relative z-10">
-                    <motion.div 
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="max-w-3xl"
-                    >
-                        <div className="flex items-center space-x-3 text-brand-accent font-black mb-6 uppercase tracking-[0.3em]">
-                            <Target className="w-6 h-6" />
-                            <span className="text-xs">Mission Intelligence</span>
-                        </div>
-                        <h1 className="text-6xl md:text-8xl font-black text-brand-black tracking-tighter leading-[0.9] mb-8">
-                            Redefining Urban <br />
-                            <span className="text-brand-accent">Mobility.</span>
-                        </h1>
-                        <p className="text-xl text-slate-500 font-medium leading-relaxed mb-12 max-w-2xl">
-                            We are building the world&apos;s most advanced parking infrastructure management system, connecting drivers with premium locations through a seamless, high-performance network.
-                        </p>
-                        <div className="flex space-x-4">
-                            <Button size="lg" className="rounded-2xl px-10">Our Vision</Button>
-                            <Button variant="secondary" size="lg" className="rounded-2xl px-10">Contact Operations</Button>
-                        </div>
-                    </motion.div>
-                </div>
+            <section className="mx-auto max-w-6xl px-6 py-24 md:py-32">
+                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl">
+                    <Eyebrow>Our mission</Eyebrow>
+                    <h1 className="mt-4 font-outfit text-6xl font-medium tracking-tight text-ink md:text-7xl">
+                        Making city parking simple
+                    </h1>
+                    <p className="mt-8 max-w-2xl text-lg text-ink-soft">
+                        We&apos;re building a smarter way to find, book, and manage parking — connecting drivers with
+                        trusted locations through a fast, dependable network.
+                    </p>
+                    <div className="mt-10 flex flex-wrap gap-4">
+                        <Button size="lg">Our vision</Button>
+                        <Button variant="secondary" size="lg">Contact us</Button>
+                    </div>
+                </motion.div>
             </section>
 
-            {/* Core Values */}
-            <section className="py-24 bg-brand-black text-white rounded-[4rem] mx-6 mb-24 overflow-hidden relative">
-                <div className="absolute top-0 right-0 p-24 opacity-10">
-                    <Car className="w-96 h-96" />
-                </div>
-                <div className="max-w-7xl mx-auto px-10">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
+            <section className="mx-6 mb-24 overflow-hidden rounded-card-lg bg-navy-deep py-24 text-white">
+                <div className="mx-auto max-w-6xl px-10">
+                    <div className="grid grid-cols-1 gap-16 md:grid-cols-3">
                         {[
-                            { icon: Zap, title: "Velocity", desc: "Real-time synchronization across the entire parking network for zero-latency bookings." },
-                            { icon: Shield, title: "Integrity", desc: "Military-grade encryption protecting every transaction and user identity." },
-                            { icon: Users, title: "Connectivity", desc: "A global community of providers and drivers interacting through a unified interface." }
+                            { icon: Zap, title: 'Speed', desc: 'Real-time availability across the network, so bookings never lag behind reality.' },
+                            { icon: Shield, title: 'Trust', desc: 'Every location is verified, and every transaction is protected.' },
+                            { icon: Users, title: 'Community', desc: 'A growing network of drivers and lot owners, connected through one simple app.' }
                         ].map((item, i) => (
-                            <motion.div 
-                                key={i}
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
+                            <motion.div
+                                key={item.title}
+                                initial={{ opacity: 0, y: 16 }}
+                                whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: i * 0.1 }}
                             >
-                                <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mb-8 border border-white/10">
-                                    <item.icon className="w-8 h-8 text-brand-accent" />
+                                <div className="mb-6 grid h-14 w-14 place-items-center rounded-card border border-white/15 bg-white/10">
+                                    <item.icon className="h-6 w-6" aria-hidden="true" />
                                 </div>
-                                <h3 className="text-2xl font-black uppercase tracking-tighter mb-4">{item.title}</h3>
-                                <p className="text-slate-400 font-medium leading-relaxed">{item.desc}</p>
+                                <h3 className="font-outfit text-2xl font-medium tracking-tight">{item.title}</h3>
+                                <p className="mt-3 text-white/70">{item.desc}</p>
                             </motion.div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Global Reach */}
-            <section className="py-24 max-w-7xl mx-auto px-6 mb-32">
-                <div className="flex flex-col md:flex-row items-center gap-20">
+            <section className="mx-auto mb-32 max-w-6xl px-6 py-24">
+                <div className="flex flex-col items-center gap-16 md:flex-row">
                     <div className="flex-1">
-                        <h2 className="text-5xl font-black text-brand-black tracking-tighter mb-8 uppercase">Global Network</h2>
-                        <div className="space-y-8">
-                             {[
-                                 { label: "Operating Regions", value: "40+", icon: MapPin },
-                                 { label: "Active Partners", value: "1,200+", icon: Users },
-                                 { label: "Successful Missions", value: "2.4M+", icon: Shield }
-                             ].map((stat, i) => (
-                                 <div key={i} className="flex items-center space-x-6">
-                                     <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center border border-slate-100">
-                                         <stat.icon className="w-6 h-6 text-brand-black" />
-                                     </div>
-                                     <div>
-                                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{stat.label}</p>
-                                         <p className="text-3xl font-black text-brand-black font-outfit">{stat.value}</p>
-                                     </div>
-                                 </div>
-                             ))}
+                        <h2 className="font-outfit text-4xl font-medium tracking-tight text-ink">Where we operate</h2>
+                        <div className="mt-8 space-y-6">
+                            {[
+                                { label: 'Cities covered', value: '40+', icon: MapPin },
+                                { label: 'Verified locations', value: '1,200+', icon: Users },
+                                { label: 'Successful bookings', value: '2.4M+', icon: Shield }
+                            ].map((stat) => (
+                                <div key={stat.label} className="flex items-center gap-5">
+                                    <div className="grid h-11 w-11 place-items-center rounded-card border border-hairline bg-surface">
+                                        <stat.icon className="h-5 w-5 text-navy" aria-hidden="true" />
+                                    </div>
+                                    <div>
+                                        <p className="text-xs uppercase tracking-widest text-ink-soft">{stat.label}</p>
+                                        <p className="font-outfit text-2xl font-medium text-ink">{stat.value}</p>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
-                    <div className="flex-1 bg-slate-50 p-12 rounded-[3.5rem] border border-slate-100">
-                         <div className="aspect-square bg-white rounded-[2.5rem] shadow-premium flex items-center justify-center p-12">
-                              <div className="text-center">
-                                   <div className="w-32 h-32 bg-brand-accent/10 rounded-full flex items-center justify-center mx-auto mb-8">
-                                        <Car className="w-16 h-16 text-brand-accent" />
-                                   </div>
-                                   <h4 className="text-xl font-black text-brand-black uppercase tracking-widest">Join the Network</h4>
-                                   <p className="text-slate-400 font-medium mt-4 mb-8">Scale your operations with ParkEase.</p>
-                                   <Button className="w-full">Get Started</Button>
-                              </div>
-                         </div>
+                    <div className="flex-1 rounded-card-lg border border-hairline bg-surface p-10">
+                        <div className="flex aspect-square flex-col items-center justify-center rounded-card bg-white p-10 text-center">
+                            <div className="mb-6 grid h-20 w-20 place-items-center rounded-full bg-navy/10">
+                                <Car className="h-10 w-10 text-navy" aria-hidden="true" />
+                            </div>
+                            <h4 className="font-outfit text-lg font-medium text-ink">List your lot</h4>
+                            <p className="mt-2 text-sm text-ink-soft">Join the ParkEase network and start earning.</p>
+                            <Button className="mt-6 w-full">Get started</Button>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* Footer Tag */}
-            <footer className="py-12 border-t border-slate-50 text-center">
-                 <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.5em]">ParkEase Operations © 2026</p>
+            <footer className="border-t border-hairline py-10 text-center">
+                <p className="text-xs uppercase tracking-[0.3em] text-ink-soft">ParkEase © 2026</p>
             </footer>
         </div>
     );
