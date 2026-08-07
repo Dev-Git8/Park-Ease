@@ -9,12 +9,60 @@ datasource db {
   provider = "postgresql"
 }
 
+enum UserRole {
+  customer
+  business
+  admin
+}
+
+enum BusinessStatus {
+  pending
+  approved
+  rejected
+  suspended
+}
+
+enum BookingStatus {
+  pending_payment
+  booked
+  cancelled
+  completed
+  overdue
+  expired
+  pending_penalty_payment
+}
+
+enum PaymentStatus {
+  pending
+  succeeded
+  failed
+  refunded
+  partially_refunded
+  canceled
+}
+
+enum PaymentProvider {
+  razorpay
+}
+
+enum PaymentPurpose {
+  booking_hold
+  overstay_penalty
+}
+
+enum SlotStatus {
+  available
+  held
+  occupied
+  maintenance
+}
+
 model User {
   id            Int             @id @default(autoincrement())
   name          String          @db.VarChar(100)
   email         String          @unique @db.VarChar(100)
   password      String          @db.VarChar(255)
-  role          String          @db.VarChar(20)
+  role          UserRole        @default(customer)
   sessions      Session[]
   createdAt     DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
   businesses    Business[]
@@ -24,30 +72,36 @@ model User {
 }
 
 model Business {
-  id           Int       @id @default(autoincrement())
-  ownerId      Int?      @map("owner_id")
-  name         String    @db.VarChar(100)
-  address      String    @db.Text
-  totalSlots   Int       @default(0) @map("total_slots")
-  pricePerHour Decimal   @default(0) @map("price_per_hour") @db.Decimal(10, 2)
-  status       String?   @default("pending") @db.VarChar(20)
-  imageUrl     String?   @map("image_url") @db.Text
-  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  
-  owner        User?     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  id           Int            @id @default(autoincrement())
+  ownerId      Int?           @map("owner_id")
+  name         String         @db.VarChar(100)
+  address      String         @db.Text
+  lat          Decimal?       @db.Decimal(9, 6)
+  lng          Decimal?       @db.Decimal(9, 6)
+  totalSlots   Int            @default(0) @map("total_slots")
+  pricePerHour Decimal        @default(0) @map("price_per_hour") @db.Decimal(10, 2)
+  status       BusinessStatus @default(pending)
+  imageUrl     String?        @map("image_url") @db.Text
+  createdAt    DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime       @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  owner        User?          @relation(fields: [ownerId], references: [id], onDelete: Restrict)
   slots        Slot[]
   bookings     Booking[]
 
+  @@index([lat, lng])
   @@map("businesses")
 }
 
 model Slot {
-  id           Int       @id @default(autoincrement())
-  businessId   Int?      @map("business_id")
-  slotNumber   String    @map("slot_number") @db.VarChar(10)
-  isAvailable  Boolean   @default(true) @map("is_available")
-  
-  business     Business? @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  id           Int        @id @default(autoincrement())
+  businessId   Int?       @map("business_id")
+  slotNumber   String     @map("slot_number") @db.VarChar(10)
+  status       SlotStatus @default(available)
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime   @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  business     Business?  @relation(fields: [businessId], references: [id], onDelete: Cascade)
   bookings     Booking[]
 
   @@unique([businessId, slotNumber])
@@ -55,23 +109,51 @@ model Slot {
 }
 
 model Booking {
-  id            Int       @id @default(autoincrement())
-  userId        Int?      @map("user_id")
-  businessId    Int?      @map("business_id")
-  slotId        Int?      @map("slot_id")
-  startTime     DateTime  @map("start_time") @db.Timestamptz(6)
-  endTime       DateTime  @map("end_time") @db.Timestamptz(6)
-  actualEndTime DateTime? @map("actual_end_time") @db.Timestamptz(6)
-  totalPrice    Decimal   @map("total_price") @db.Decimal(10, 2)
-  penaltyAmount Decimal?  @default(0) @map("penalty_amount") @db.Decimal(10, 2)
-  status        String?   @default("booked") @db.VarChar(20)
-  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  id            Int           @id @default(autoincrement())
+  userId        Int?          @map("user_id")
+  businessId    Int?          @map("business_id")
+  slotId        Int?          @map("slot_id")
+  startTime     DateTime      @map("start_time") @db.Timestamptz(6)
+  endTime       DateTime      @map("end_time") @db.Timestamptz(6)
+  actualEndTime DateTime?     @map("actual_end_time") @db.Timestamptz(6)
+  totalPrice    Decimal       @map("total_price") @db.Decimal(10, 2)
+  penaltyAmount Decimal?      @default(0) @map("penalty_amount") @db.Decimal(10, 2)
+  status        BookingStatus @default(pending_payment)
+  createdAt     DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  user          User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  business      Business? @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  slot          Slot?     @relation(fields: [slotId], references: [id], onDelete: Cascade)
+  user          User?         @relation(fields: [userId], references: [id], onDelete: Restrict)
+  business      Business?     @relation(fields: [businessId], references: [id], onDelete: Restrict)
+  slot          Slot?         @relation(fields: [slotId], references: [id], onDelete: Restrict)
+  payments      Payment[]
 
+  @@index([status, endTime])
+  @@index([slotId, status])
+  @@index([userId])
+  @@index([businessId])
   @@map("bookings")
+}
+
+model Payment {
+  id                Int             @id @default(autoincrement())
+  bookingId         Int             @map("booking_id")
+  provider          PaymentProvider @default(razorpay)
+  purpose           PaymentPurpose  @default(booking_hold)
+  providerOrderId   String          @unique @map("provider_order_id")
+  providerPaymentId String?         @map("provider_payment_id")
+  amount            Decimal         @db.Decimal(10, 2)
+  currency          String          @default("INR") @db.VarChar(10)
+  status            PaymentStatus   @default(pending)
+  refundedAmount    Decimal         @default(0) @map("refunded_amount") @db.Decimal(10, 2)
+  failureReason     String?         @map("failure_reason") @db.Text
+  rawWebhookPayload Json?           @map("raw_webhook_payload")
+  createdAt         DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime        @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  booking           Booking         @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+
+  @@index([bookingId])
+  @@map("payments")
 }
 
 model Session {
@@ -85,5 +167,6 @@ model Session {
 
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([expiresAt])
   @@map("sessions")
 }
