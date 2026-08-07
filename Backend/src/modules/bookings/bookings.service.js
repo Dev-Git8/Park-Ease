@@ -251,6 +251,10 @@ const terminateBookingTransaction = async (bookingId, userId) => {
                 actualEndTime: now,
                 penaltyAmount: penalty,
             },
+            include: {
+                business: { select: { name: true } },
+                slot: { select: { slotNumber: true } },
+            },
         });
 
         return { booking: updatedBooking, penaltyAmount: penalty };
