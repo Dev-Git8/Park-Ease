@@ -1,10 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Check, ArrowRight } from 'lucide-react';
 import Button from '../../components/ui/Button';
 
 const BookingSuccess = () => {
+    const { state } = useLocation();
+    const booking = state?.booking;
+
     return (
         <div className="flex min-h-screen items-center justify-center bg-surface p-6">
             <motion.div
@@ -29,9 +32,23 @@ const BookingSuccess = () => {
                         <p className="text-sm text-ink-soft">Your reservation is confirmed</p>
 
                         <div className="rounded-card border border-hairline bg-surface p-6">
-                            <p className="text-sm text-ink-soft">
-                                Your spot is reserved and ready. You can review the details any time from your account.
-                            </p>
+                            {booking ? (
+                                <div className="space-y-1">
+                                    <p className="text-sm text-ink-soft">
+                                        Booking #{booking.id}{booking.business?.name ? ` · ${booking.business.name}` : ''}
+                                        {booking.slot?.slotNumber ? ` · Slot ${booking.slot.slotNumber}` : ''}
+                                    </p>
+                                    <p className="text-sm text-ink-soft">
+                                        {new Date(booking.startTime).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}
+                                        {' – '}
+                                        {new Date(booking.endTime).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}
+                                    </p>
+                                </div>
+                            ) : (
+                                <p className="text-sm text-ink-soft">
+                                    Your spot is reserved and ready. You can review the details any time from your account.
+                                </p>
+                            )}
                         </div>
 
                         <div className="grid grid-cols-1 gap-3 pt-2">
