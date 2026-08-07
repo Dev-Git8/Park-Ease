@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../api/api';
 import { useSocket } from '../../context/SocketContext';
-import { MapPin, Clock, ShieldCheck, Car, ArrowLeft, CheckCircle2, Info, XCircle } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import usePayment from '../../hooks/usePayment';
+import { MapPin, Clock, ShieldCheck, Car, ArrowLeft, CheckCircle2, Info, XCircle, AlertTriangle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
@@ -19,6 +21,9 @@ const BusinessDetails = () => {
 
     const [duration, setDuration] = useState(60);
     const [arrivalTime, setArrivalTime] = useState('');
+    const [pendingPayment, setPendingPayment] = useState(null); // { booking, order } while awaiting payment
+    const { user } = useAuth();
+    const { pay, isProcessing, error: paymentError } = usePayment();
 
     const fetchSlots = async () => {
         try {
@@ -27,7 +32,7 @@ const BusinessDetails = () => {
 
             setSelectedSlot(prev => {
                 const refreshed = slotsRes.data.data.find(s => s.id === prev?.id);
-                return refreshed?.isAvailable ? refreshed : null;
+                return refreshed?.status === 'available' ? refreshed : null;
             });
         } catch (error) {
             console.error('Error fetching slots', error);
@@ -73,6 +78,22 @@ const BusinessDetails = () => {
         };
     }, [socket, id]);
 
+    const attemptPayment = async (booking, order) => {
+        const ok = await pay(order, {
+            description: `Parking at ${business.name}`,
+            prefill: { name: user?.name, email: user?.email },
+        });
+
+        if (ok) {
+            setPendingPayment(null);
+            navigate('/booking-success', {
+                state: { booking: { ...booking, business: { name: business.name }, slot: { slotNumber: selectedSlot?.slotNumber } } },
+            });
+        } else {
+            setPendingPayment({ booking, order });
+        }
+    };
+
     const handleBooking = async () => {
         if (!selectedSlot || !arrivalTime) return alert('Please choose an arrival time and a slot.');
         setBookingLoading(true);
@@ -84,21 +105,24 @@ const BusinessDetails = () => {
             endStr.setMinutes(endStr.getMinutes() + parseInt(duration));
             const endTime = endStr.toISOString();
 
-            const totalPrice = (business.pricePerHour / 60) * parseInt(duration);
-
-            await api.post('/bookings', {
+            const { data } = await api.post('/bookings', {
                 businessId: business.id,
                 slotId: selectedSlot.id,
                 startTime,
                 endTime,
-                totalPrice: parseFloat(totalPrice.toFixed(2))
             });
-            navigate('/profile');
-        } catch (error) {
-            alert(error.response?.data?.message || 'Booking failed');
-        } finally {
+
             setBookingLoading(false);
+            await attemptPayment(data.data.booking, data.data.order);
+        } catch (error) {
+            setBookingLoading(false);
+            alert(error.response?.data?.message || 'Booking failed');
         }
+    };
+
+    const handleRetryPayment = () => {
+        if (!pendingPayment) return;
+        attemptPayment(pendingPayment.booking, pendingPayment.order);
     };
 
     if (loading || !business) return (
@@ -151,24 +175,27 @@ const BusinessDetails = () => {
                             </div>
 
                             <div className="grid grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-5">
-                                {slots.map((slot) => (
-                                    <button
-                                        key={slot.id}
-                                        disabled={!slot.isAvailable}
-                                        onClick={() => setSelectedSlot(slot)}
-                                        className={`relative flex aspect-square flex-col items-center justify-center gap-2 rounded-2xl transition-colors ${
-                                            slot.isAvailable
-                                                ? selectedSlot?.id === slot.id
-                                                    ? 'bg-navy text-white'
-                                                    : 'border border-hairline bg-surface text-ink-soft hover:border-navy'
-                                                : 'cursor-not-allowed bg-ghost/40 text-ink-soft/50'
-                                        }`}
-                                    >
-                                        <Car size={22} aria-hidden="true" />
-                                        <span className="font-outfit text-sm font-medium uppercase">{slot.slotNumber}</span>
-                                        {!slot.isAvailable && <XCircle size={12} className="absolute right-2 top-2" aria-hidden="true" />}
-                                    </button>
-                                ))}
+                                {slots.map((slot) => {
+                                    const isAvailable = slot.status === 'available';
+                                    return (
+                                        <button
+                                            key={slot.id}
+                                            disabled={!isAvailable}
+                                            onClick={() => setSelectedSlot(slot)}
+                                            className={`relative flex aspect-square flex-col items-center justify-center gap-2 rounded-2xl transition-colors ${
+                                                isAvailable
+                                                    ? selectedSlot?.id === slot.id
+                                                        ? 'bg-navy text-white'
+                                                        : 'border border-hairline bg-surface text-ink-soft hover:border-navy'
+                                                    : 'cursor-not-allowed bg-ghost/40 text-ink-soft/50'
+                                            }`}
+                                        >
+                                            <Car size={22} aria-hidden="true" />
+                                            <span className="font-outfit text-sm font-medium uppercase">{slot.slotNumber}</span>
+                                            {!isAvailable && <XCircle size={12} className="absolute right-2 top-2" aria-hidden="true" />}
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </div>
 
@@ -243,15 +270,27 @@ const BusinessDetails = () => {
                                     </div>
                                 </div>
 
+                                {paymentError && (
+                                    <div className="mb-4 flex items-start gap-3 rounded-2xl border border-red-400/30 bg-red-500/10 p-4">
+                                        <AlertTriangle size={16} className="mt-0.5 flex-shrink-0 text-red-300" aria-hidden="true" />
+                                        <p className="text-xs text-red-200">{paymentError}</p>
+                                    </div>
+                                )}
+
                                 <Button
-                                    onClick={handleBooking}
-                                    disabled={!selectedSlot || bookingLoading}
+                                    onClick={pendingPayment ? handleRetryPayment : handleBooking}
+                                    disabled={!selectedSlot || bookingLoading || isProcessing}
                                     variant="secondary"
                                     size="lg"
                                     className="w-full"
                                 >
-                                    {bookingLoading ? (
+                                    {bookingLoading || isProcessing ? (
                                         <span className="h-5 w-5 animate-spin rounded-full border-2 border-navy/30 border-t-navy" />
+                                    ) : pendingPayment ? (
+                                        <>
+                                            Retry payment
+                                            <CheckCircle2 size={18} className="ml-3" aria-hidden="true" />
+                                        </>
                                     ) : (
                                         <>
                                             Confirm booking
