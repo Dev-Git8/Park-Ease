@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import api from '../api/api';
 import { setAccessToken, clearAccessToken } from '../api/authStore';
 
@@ -18,6 +18,7 @@ export const AuthProvider = ({ children }) => {
 
     const [user, setUser] = useState(getInitialUser());
     const [loading, setLoading] = useState(true);
+    const hasRestoredSessionRef = useRef(false);
 
     const logout = useCallback(async () => {
         try {
@@ -31,8 +32,15 @@ export const AuthProvider = ({ children }) => {
         }
     }, []);
 
-    // Initial check for session
+    // Initial check for session. Guarded against StrictMode's dev-only
+    // double-invoke of mount effects: the backend rotates the refresh
+    // token on every /auth/refresh call, so two concurrent calls race -
+    // whichever loses gets a 401 for a token the winner already rotated
+    // away, which would otherwise silently log the UI out on load.
     useEffect(() => {
+        if (hasRestoredSessionRef.current) return;
+        hasRestoredSessionRef.current = true;
+
         const restoreSession = async () => {
             try {
                 // Try to refresh token on app load

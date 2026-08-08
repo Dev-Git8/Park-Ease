@@ -12,7 +12,19 @@ REQUIRED_ENV.forEach((key) => {
 });
 
 // 2. Setup Driver Adapter (Prisma 7)
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+// This server's default session timezone isn't UTC (e.g. Asia/Calcutta),
+// and raw timestamptz results (via $queryRaw) come back with that offset
+// silently dropped instead of converted - NOW() ends up read back as if
+// it were 5:30 ahead of real UTC. Every scheduler sweep compares
+// timestamps with raw SQL (created_at <= NOW() - INTERVAL ...), so every
+// pooled connection is pinned to UTC as a startup option (applied
+// atomically as part of connection setup, before Prisma can run anything
+// on it - a plain `client.query("SET TIME ZONE ...")` after connecting
+// would race with Prisma's own setup query on the same fresh connection).
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    options: '-c TimeZone=UTC',
+});
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
