@@ -38,14 +38,14 @@ const Register = () => {
     };
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-surface p-6">
+        <div className="flex flex-1 items-center justify-center bg-surface p-6">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="w-full max-w-2xl"
             >
                 <div className="mb-10 text-center">
-                    <div className="mx-auto mb-6 grid h-16 w-16 place-items-center rounded-card bg-navy">
+                    <div className="mx-auto mb-6 grid h-16 w-16 place-items-center rounded-card bg-ignition">
                         <Car className="h-8 w-8 text-white" aria-hidden="true" />
                     </div>
                     <h1 className="font-outfit text-4xl font-medium tracking-tight text-ink">Create your account</h1>
@@ -109,8 +109,8 @@ const Register = () => {
                                     onClick={() => setFormData({ ...formData, role: 'customer' })}
                                     className={`flex flex-col items-center gap-2 rounded-2xl border py-5 transition-colors ${
                                         formData.role === 'customer'
-                                            ? 'border-navy bg-navy text-white'
-                                            : 'border-hairline bg-surface text-ink-soft hover:border-navy'
+                                            ? 'border-ignition bg-ignition text-white'
+                                            : 'border-hairline bg-surface text-ink-soft hover:border-ignition'
                                     }`}
                                 >
                                     <User className="h-5 w-5" aria-hidden="true" />
@@ -121,8 +121,8 @@ const Register = () => {
                                     onClick={() => setFormData({ ...formData, role: 'business' })}
                                     className={`flex flex-col items-center gap-2 rounded-2xl border py-5 transition-colors ${
                                         formData.role === 'business'
-                                            ? 'border-navy bg-navy text-white'
-                                            : 'border-hairline bg-surface text-ink-soft hover:border-navy'
+                                            ? 'border-ignition bg-ignition text-white'
+                                            : 'border-hairline bg-surface text-ink-soft hover:border-ignition'
                                     }`}
                                 >
                                     <Car className="h-5 w-5" aria-hidden="true" />
@@ -145,7 +145,7 @@ const Register = () => {
 
                     <p className="mt-10 text-center text-sm text-ink-soft">
                         Already have an account?
-                        <Link to="/login" className="ml-2 font-medium text-navy hover:underline">Sign in</Link>
+                        <Link to="/login" className="ml-2 font-medium text-ignition hover:underline">Sign in</Link>
                     </p>
                 </div>
             </motion.div>

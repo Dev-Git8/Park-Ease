@@ -35,14 +35,14 @@ const Login = () => {
     };
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-surface p-6">
+        <div className="flex flex-1 items-center justify-center bg-surface p-6">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="w-full max-w-md"
             >
                 <div className="mb-10 text-center">
-                    <div className="mx-auto mb-6 grid h-16 w-16 place-items-center rounded-card bg-navy">
+                    <div className="mx-auto mb-6 grid h-16 w-16 place-items-center rounded-card bg-ignition">
                         <Car className="h-8 w-8 text-white" aria-hidden="true" />
                     </div>
                     <h1 className="font-outfit text-4xl font-medium tracking-tight text-ink">Welcome back</h1>
@@ -97,7 +97,7 @@ const Login = () => {
 
                     <p className="mt-8 text-center text-sm text-ink-soft">
                         New to ParkEase?
-                        <Link to="/register" className="ml-2 font-medium text-navy hover:underline">Create an account</Link>
+                        <Link to="/register" className="ml-2 font-medium text-ignition hover:underline">Create an account</Link>
                     </p>
                 </div>
             </motion.div>
