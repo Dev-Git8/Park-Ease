@@ -294,3 +294,73 @@ picked up by the existing hold-expiry scheduler sweep exactly as before.
   sequence, after frontend sync.
 - A collections/follow-up flow for penalties left unpaid past
   `PENALTY_PAYMENT_GRACE_MINUTES` (flagged, not built).
+
+### Session notes (2026-08-08, continued — frontend payment sync)
+
+Second of the three sequenced plans completed:
+`docs/superpowers/plans/2026-08-08-frontend-payment-sync.md`. The
+frontend now matches the backend's Razorpay contracts end-to-end: real
+booking-payment via Razorpay Checkout.js (`frontend/src/utils/razorpay.js`
++ shared `frontend/src/hooks/usePayment.js`), a real overstay-penalty
+payment on the checkout-summary screen (previously a 100% fake
+`setTimeout`), resuming an abandoned booking or penalty payment from
+Profile, and the pre-existing `slot.isAvailable` vs. `slot.status`
+frontend/backend mismatch fixed as part of the same pass. Verified in a
+real headless-Chromium browser session (Playwright, installed ad hoc for
+this verification only - not added as a project dependency), not just
+via curl, since a payment flow this central deserved more than an API
+smoke test.
+
+**Two significant bugs found and fixed during that browser verification
+(both pre-existing, unrelated to Razorpay itself, but actively breaking
+the very flows this plan needed to verify):**
+
+1. **Session appeared to log out on every page load in dev.**
+   `AuthContext.jsx`'s mount effect calls `/auth/refresh` to restore a
+   session, but that endpoint *rotates* the refresh token on every call
+   (deletes the old session row, issues a new one). React StrictMode
+   double-invokes mount effects in development, so two `restoreSession()`
+   calls fired back-to-back using the same not-yet-rotated cookie -
+   whichever request the server processed second found its token already
+   deleted by the first and got a 401, and that 401's `setUser(null)`
+   could overwrite the other call's successful state. Fixed with a
+   `useRef` guard so the effect body only actually runs once per mount,
+   which is the standard fix for this exact StrictMode pattern. Dev-only
+   in practice (StrictMode's double-invoke is stripped from production
+   builds), but real enough to make manual testing unreliable, and a
+   fragile pattern worth closing regardless.
+
+2. **Every scheduler sweep was firing within seconds instead of after its
+   real grace period.** Traced by creating a booking and immediately
+   inspecting `created_at <= NOW() - INTERVAL '15 minutes'` computed
+   entirely server-side - it evaluated `true` for a booking one second
+   old. Root cause: this Postgres server's default session `TimeZone` is
+   `Asia/Calcutta` (not UTC), and raw `timestamptz` results read back
+   through `$queryRaw` (via `@prisma/adapter-pg` + `pg`) came back with
+   that +5:30 offset silently dropped instead of converted - `NOW()` was
+   effectively read as 5.5 hours ahead of real UTC. Every scheduler sweep
+   (`expireBookings`, `autoTerminateOverdueBookings`, `expirePenaltyHolds`,
+   `expirePaymentHolds`) compares timestamps via raw SQL, so all of them
+   were affected - holds, overdue grace periods, and penalty-payment
+   grace periods were all resolving almost immediately instead of after
+   `HOLD_EXPIRY_MINUTES`/`AUTO_TERMINATE_GRACE_MINUTES`/
+   `PENALTY_PAYMENT_GRACE_MINUTES`. Fixed in `src/config/prisma.js` by
+   pinning every pooled connection to UTC via a `pg.Pool` startup option
+   (`options: '-c TimeZone=UTC'`) - applied atomically as part of
+   connection setup, avoiding a race with Prisma's own setup query on a
+   freshly-connected client. This is a real production-readiness fix, not
+   just a local dev quirk: a managed Postgres instance in any non-UTC
+   region default would hit the identical bug if this had shipped as-is.
+   Full backend test suite re-run clean after the fix (5 suites, 18
+   tests).
+
+**Not done / explicitly out of scope this pass:**
+- No automated test coverage was added for the touched frontend pages
+  (`BusinessDetails`, `Profile`, `CheckoutSummary`, `BookingSuccess`) -
+  none existed before this pass either, and building a harness around a
+  live third-party checkout modal (`window.Razorpay`) is a bigger
+  investment than this sync pass called for. Verification was manual
+  (Playwright-driven browser walkthrough), consistent with how the
+  backend plan verified its own Razorpay integration.
+- The sitewide "Midnight Garage" visual overhaul is the third and final
+  plan in the sequence - not started yet.
