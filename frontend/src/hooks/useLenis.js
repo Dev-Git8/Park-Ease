@@ -26,6 +26,7 @@ const useLenis = () => {
         () => ({
             stop: () => lenisRef.current?.stop(),
             start: () => lenisRef.current?.start(),
+            scrollTo: (target, options) => lenisRef.current?.scrollTo(target, { immediate: true, ...options }),
         }),
         []
     );

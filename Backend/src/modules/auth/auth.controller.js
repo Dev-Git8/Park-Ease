@@ -1,17 +1,26 @@
 const authService = require('./auth.service');
-const { generateAccessToken, generateRefreshToken, verifyRefreshToken } = require('../../utils/jwt.utils');
+const { generateAccessToken, generateRefreshToken } = require('../../utils/jwt.utils');
 const bcrypt = require('bcrypt');
+
+const ALLOWED_SELF_REGISTER_ROLES = ['customer', 'business'];
 
 const register = async (req, res, next) => {
     try {
         const { name, email, password, role } = req.body;
+
+        let safeRole = 'customer';
+        if (ALLOWED_SELF_REGISTER_ROLES.includes(role)) {
+            safeRole = role;
+        } else if (role) {
+            console.warn(`[auth] Registration attempted with disallowed role "${role}" from IP ${req.ip}`);
+        }
 
         const existingUser = await authService.findUserByEmail(email);
         if (existingUser) {
             return res.status(400).json({ success: false, message: 'User already exists' });
         }
 
-        const user = await authService.createUser(name, email, password, role);
+        const user = await authService.createUser(name, email, password, safeRole);
 
         res.status(201).json({
             success: true,
@@ -85,6 +94,24 @@ const refresh = async (req, res, next) => {
         const user = session.user;
 
         const newAccessToken = generateAccessToken(user);
+        const newRefreshToken = generateRefreshToken(user);
+
+        // Rotate on every refresh: the old token is deleted and replaced,
+        // so a stolen refresh token is only ever usable once.
+        await authService.rotateSession(
+            refreshToken,
+            newRefreshToken,
+            user.id,
+            req.headers['user-agent'],
+            req.ip
+        );
+
+        res.cookie('refreshToken', newRefreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        });
 
         res.status(200).json({
             success: true,

@@ -2,11 +2,14 @@ const express = require('express');
 const router = express.Router();
 const bookingsController = require('./bookings.controller');
 const { authMiddleware, roleMiddleware } = require('../../middlewares/auth.middleware');
+const { bookingCreateLimiter } = require('../../middlewares/rateLimit.middleware');
+const { validate } = require('../../middlewares/validate.middleware');
+const { createBookingSchema } = require('./bookings.schemas');
 
 // @route   POST api/bookings
 // @desc    Create a new booking
 // @access  Private (Customer)
-router.post('/', authMiddleware, roleMiddleware(['customer']), bookingsController.createBooking);
+router.post('/', authMiddleware, roleMiddleware(['customer']), bookingCreateLimiter, validate(createBookingSchema), bookingsController.createBooking);
 
 // @route   GET api/bookings/my
 // @desc    Get current user's bookings

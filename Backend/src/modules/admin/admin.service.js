@@ -1,4 +1,5 @@
 const prisma = require('../../config/prisma');
+const authService = require('../auth/auth.service');
 
 const getAllBusinesses = async () => {
     return await prisma.business.findMany({
@@ -34,8 +35,19 @@ const updateBusinessStatus = async (id, status) => {
     });
 };
 
+// The one legitimate caller that may pass role='admin' to createUser - it's
+// gated by roleMiddleware(['admin']) on the route, not by createUser itself.
+const inviteUser = async (name, email, password, role) => {
+    const existing = await authService.findUserByEmail(email);
+    if (existing) {
+        throw new Error('User already exists');
+    }
+    return await authService.createUser(name, email, password, role);
+};
+
 module.exports = {
     getAllBusinesses,
     getAllUsers,
-    updateBusinessStatus
+    updateBusinessStatus,
+    inviteUser
 };

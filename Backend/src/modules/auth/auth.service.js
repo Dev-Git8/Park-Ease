@@ -1,14 +1,27 @@
 const prisma = require('../../config/prisma');
 const bcrypt = require('bcrypt');
 
+const VALID_ROLES = ['customer', 'business', 'admin'];
+
 const createUser = async (name, email, password, role) => {
+    // Defense-in-depth: the public register controller already whitelists to
+    // customer/business. This second gate covers legitimate admin-created
+    // callers (e.g. the admin-invite endpoint) while still rejecting garbage.
+    const safeRole = VALID_ROLES.includes(role) ? role : 'customer';
     const hashedPassword = await bcrypt.hash(password, 10);
     return await prisma.user.create({
         data: {
             name,
             email,
             password: hashedPassword,
-            role,
+            role: safeRole,
+        },
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+            createdAt: true,
         },
     });
 };
@@ -84,6 +97,27 @@ const validateSession = async (token) => {
     return session;
 };
 
+// Rotates a refresh token: deletes the old session row and creates a new one
+// in a single transaction, so a stolen token is only ever usable once.
+const rotateSession = async (oldToken, newToken, userId, userAgent, ipAddress) => {
+    const sevenDaysFromNow = new Date();
+    sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
+
+    return await prisma.$transaction(async (tx) => {
+        await tx.session.deleteMany({ where: { token: oldToken } });
+
+        return await tx.session.create({
+            data: {
+                userId: parseInt(userId),
+                token: newToken,
+                userAgent,
+                ipAddress,
+                expiresAt: sevenDaysFromNow,
+            },
+        });
+    });
+};
+
 const deleteSession = async (token) => {
     try {
         await prisma.session.delete({
@@ -106,6 +140,7 @@ module.exports = {
     findUserById,
     createSession,
     validateSession,
+    rotateSession,
     deleteSession,
     clearAllUserSessions,
 };

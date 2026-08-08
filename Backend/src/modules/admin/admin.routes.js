@@ -18,4 +18,10 @@ router.get('/users', adminController.getUsers);
 // @desc    Approve or reject a business
 router.put('/businesses/:id/status', adminController.approveBusiness);
 
+// @route   POST api/admin/users
+// @desc    Create a user of any role (customer/business/admin) - the one
+//          legitimate way to create additional admin accounts after bootstrap
+// @access  Private (Admin only, via the router.use gate above)
+router.post('/users', adminController.inviteUser);
+
 module.exports = router;

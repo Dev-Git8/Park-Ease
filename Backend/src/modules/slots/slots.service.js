@@ -1,29 +1,11 @@
 const prisma = require('../../config/prisma');
 const { redisClient, isRedisConnected } = require('../../config/redis');
-const { getIO } = require('../../config/socket');
-
-const emitSlotsUpdated = (businessId) => {
-    try {
-        const io = getIO();
-        io.to(`business_${businessId}`).emit('slotsUpdated', { businessId });
-    } catch (err) {
-        console.error('Failed to emit slotsUpdated event:', err.message);
-    }
-};
-
-const invalidateSlotsCache = async (businessId) => {
-    if (!isRedisConnected()) return;
-    try {
-        await redisClient.del(`slots:${businessId}`);
-    } catch (err) {
-        console.error('Failed to invalidate Redis cache:', err.message);
-    }
-};
+const { emitSlotsUpdated, invalidateSlotsCache } = require('../../utils/realtime.utils');
 
 const createSlots = async (businessId, slots) => {
     // slots is an array of slot numbers e.g. ['A1', 'A2']
     const createdSlots = [];
-    
+
     await prisma.$transaction(async (tx) => {
         for (const slotNumber of slots) {
             try {
@@ -31,7 +13,7 @@ const createSlots = async (businessId, slots) => {
                     data: {
                         businessId: parseInt(businessId),
                         slotNumber,
-                        isAvailable: true,
+                        status: 'available',
                     },
                 });
                 createdSlots.push(slot);
@@ -85,10 +67,10 @@ const getSlotsByBusiness = async (businessId) => {
     return sortedRows;
 };
 
-const updateSlotAvailability = async (slotId, isAvailable) => {
+const updateSlotStatus = async (slotId, status) => {
     const updatedSlot = await prisma.slot.update({
         where: { id: parseInt(slotId) },
-        data: { isAvailable },
+        data: { status },
     });
     
     if (updatedSlot) {
@@ -106,7 +88,7 @@ const deleteSlot = async (slotId, ownerId) => {
             business: true,
             bookings: {
                 where: {
-                    status: { in: ['booked', 'overdue'] }
+                    status: { in: ['pending_payment', 'booked', 'overdue'] }
                 }
             }
         }
@@ -120,7 +102,7 @@ const deleteSlot = async (slotId, ownerId) => {
         throw new Error('Unauthorized to delete this slot');
     }
 
-    if (!slot.isAvailable) {
+    if (slot.status === 'occupied' || slot.status === 'held') {
         throw new Error('Cannot delete an occupied slot');
     }
 
@@ -143,6 +125,6 @@ const deleteSlot = async (slotId, ownerId) => {
 module.exports = {
     createSlots,
     getSlotsByBusiness,
-    updateSlotAvailability,
+    updateSlotStatus,
     deleteSlot
 };

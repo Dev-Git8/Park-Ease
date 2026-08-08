@@ -34,8 +34,36 @@ const approveBusiness = async (req, res, next) => {
     }
 };
 
+const ADMIN_INVITE_ROLES = ['customer', 'business', 'admin'];
+
+// The calling admin sets/communicates the password out-of-band - there's no
+// email infra in this stack yet.
+const inviteUser = async (req, res, next) => {
+    try {
+        const { name, email, password, role } = req.body;
+
+        if (!ADMIN_INVITE_ROLES.includes(role)) {
+            return res.status(400).json({ success: false, message: 'Invalid role' });
+        }
+
+        const user = await adminService.inviteUser(name, email, password, role);
+
+        res.status(201).json({
+            success: true,
+            message: 'User created successfully',
+            data: user
+        });
+    } catch (error) {
+        if (error.message === 'User already exists') {
+            return res.status(400).json({ success: false, message: error.message });
+        }
+        next(error);
+    }
+};
+
 module.exports = {
     getBusinesses,
     getUsers,
-    approveBusiness
+    approveBusiness,
+    inviteUser
 };
