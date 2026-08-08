@@ -22,16 +22,33 @@ const BusinessDetails = () => {
     const [duration, setDuration] = useState(60);
     const [arrivalTime, setArrivalTime] = useState('');
     const [pendingPayment, setPendingPayment] = useState(null); // { booking, order } while awaiting payment
+    const [justAvailableIds, setJustAvailableIds] = useState(new Set());
     const { user } = useAuth();
     const { pay, isProcessing, error: paymentError } = usePayment();
 
     const fetchSlots = async () => {
         try {
             const slotsRes = await api.get(`/slots/${id}`);
-            setSlots(slotsRes.data.data);
+            const freshSlots = slotsRes.data.data;
+
+            setSlots(prevSlots => {
+                const newlyAvailable = freshSlots
+                    .filter(fresh => {
+                        const prev = prevSlots.find(s => s.id === fresh.id);
+                        return fresh.status === 'available' && prev && prev.status !== 'available';
+                    })
+                    .map(s => s.id);
+
+                if (newlyAvailable.length > 0) {
+                    setJustAvailableIds(new Set(newlyAvailable));
+                    window.setTimeout(() => setJustAvailableIds(new Set()), 2400);
+                }
+
+                return freshSlots;
+            });
 
             setSelectedSlot(prev => {
-                const refreshed = slotsRes.data.data.find(s => s.id === prev?.id);
+                const refreshed = freshSlots.find(s => s.id === prev?.id);
                 return refreshed?.status === 'available' ? refreshed : null;
             });
         } catch (error) {
@@ -127,17 +144,17 @@ const BusinessDetails = () => {
 
     if (loading || !business) return (
         <div className="flex min-h-screen items-center justify-center bg-surface">
-            <div className="h-10 w-10 animate-spin rounded-full border-2 border-navy/30 border-t-navy" />
+            <div className="h-10 w-10 animate-spin rounded-full border-2 border-pulse/30 border-t-pulse" />
         </div>
     );
 
     return (
         <div className="min-h-screen bg-surface pb-20">
-            <div className="relative h-80 w-full overflow-hidden bg-navy-deep">
+            <div className="relative h-80 w-full overflow-hidden bg-asphalt">
                 {business.imageUrl && (
                     <img src={business.imageUrl} alt={business.name} className="absolute inset-0 h-full w-full object-cover opacity-50" />
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-surface via-navy-deep/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-surface via-asphalt/20 to-transparent" />
             </div>
 
             <div className="mx-auto max-w-6xl px-6">
@@ -151,7 +168,7 @@ const BusinessDetails = () => {
                     </button>
 
                     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
-                        <Badge variant="navy">Verified location</Badge>
+                        <Badge variant="ignition">Verified location</Badge>
                         <h1 className="font-outfit text-4xl font-medium tracking-tight text-ink sm:text-5xl">{business.name}</h1>
                         <p className="flex items-center gap-2 text-sm text-ink-soft">
                             <MapPin size={16} aria-hidden="true" />
@@ -177,16 +194,19 @@ const BusinessDetails = () => {
                             <div className="grid grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-5">
                                 {slots.map((slot) => {
                                     const isAvailable = slot.status === 'available';
+                                    const justBecameAvailable = justAvailableIds.has(slot.id);
                                     return (
                                         <button
                                             key={slot.id}
                                             disabled={!isAvailable}
                                             onClick={() => setSelectedSlot(slot)}
                                             className={`relative flex aspect-square flex-col items-center justify-center gap-2 rounded-2xl transition-colors ${
+                                                justBecameAvailable ? 'animate-glow-pulse' : ''
+                                            } ${
                                                 isAvailable
                                                     ? selectedSlot?.id === slot.id
-                                                        ? 'bg-navy text-white'
-                                                        : 'border border-hairline bg-surface text-ink-soft hover:border-navy'
+                                                        ? 'bg-ignition text-white'
+                                                        : 'border border-hairline bg-surface text-ink-soft hover:border-ignition'
                                                     : 'cursor-not-allowed bg-ghost/40 text-ink-soft/50'
                                             }`}
                                         >
@@ -202,14 +222,14 @@ const BusinessDetails = () => {
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                             <div className="rounded-card border border-hairline bg-white p-6">
                                 <div className="mb-4 grid h-10 w-10 place-items-center rounded-pill bg-surface">
-                                    <Clock className="h-5 w-5 text-navy" aria-hidden="true" />
+                                    <Clock className="h-5 w-5 text-ignition" aria-hidden="true" />
                                 </div>
                                 <h4 className="font-outfit text-lg font-medium text-ink">Open 24/7</h4>
                                 <p className="mt-1 text-sm text-ink-soft">Slots are available for booking at any time.</p>
                             </div>
                             <div className="rounded-card border border-hairline bg-white p-6">
                                 <div className="mb-4 grid h-10 w-10 place-items-center rounded-pill bg-surface">
-                                    <ShieldCheck className="h-5 w-5 text-navy" aria-hidden="true" />
+                                    <ShieldCheck className="h-5 w-5 text-ignition" aria-hidden="true" />
                                 </div>
                                 <h4 className="font-outfit text-lg font-medium text-ink">Secure booking</h4>
                                 <p className="mt-1 text-sm text-ink-soft">Payments are processed securely and monitored in real time.</p>
@@ -219,7 +239,7 @@ const BusinessDetails = () => {
 
                     <div className="lg:col-span-1">
                         <div className="sticky top-28 space-y-6">
-                            <div className="rounded-card-lg bg-navy-deep p-8 text-white">
+                            <div className="rounded-card-lg bg-asphalt p-8 text-white">
                                 <h3 className="font-outfit text-xl font-medium tracking-tight">Booking summary</h3>
 
                                 <div className="mt-6 space-y-4 border-b border-white/10 pb-6">
@@ -229,7 +249,7 @@ const BusinessDetails = () => {
                                             type="datetime-local"
                                             value={arrivalTime}
                                             onChange={(e) => setArrivalTime(e.target.value)}
-                                            className="mt-2 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white focus:border-navy-light focus:outline-none"
+                                            className="mt-2 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white focus:border-ignition-light focus:outline-none"
                                         />
                                     </label>
                                     <label className="block">
@@ -237,7 +257,7 @@ const BusinessDetails = () => {
                                         <select
                                             value={duration}
                                             onChange={(e) => setDuration(parseInt(e.target.value))}
-                                            className="mt-2 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white focus:border-navy-light focus:outline-none"
+                                            className="mt-2 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white focus:border-ignition-light focus:outline-none"
                                         >
                                             <option value={5}>5 minutes</option>
                                             <option value={10}>10 minutes</option>
@@ -285,7 +305,7 @@ const BusinessDetails = () => {
                                     className="w-full"
                                 >
                                     {bookingLoading || isProcessing ? (
-                                        <span className="h-5 w-5 animate-spin rounded-full border-2 border-navy/30 border-t-navy" />
+                                        <span className="h-5 w-5 animate-spin rounded-full border-2 border-pulse/30 border-t-pulse" />
                                     ) : pendingPayment ? (
                                         <>
                                             Retry payment
@@ -301,7 +321,7 @@ const BusinessDetails = () => {
                             </div>
 
                             <div className="flex items-start gap-3 rounded-card border border-hairline bg-white p-5">
-                                <Info className="mt-0.5 h-4 w-4 flex-shrink-0 text-navy" aria-hidden="true" />
+                                <Info className="mt-0.5 h-4 w-4 flex-shrink-0 text-ignition" aria-hidden="true" />
                                 <p className="text-xs text-ink-soft">
                                     Booking is final. Cancellation is subject to the location&apos;s policy and space availability.
                                 </p>
