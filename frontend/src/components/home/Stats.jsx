@@ -4,7 +4,7 @@ import Reveal from '../ui/Reveal';
 import { STATS } from '../../data/homeContent';
 
 const Stats = () => (
-    <section className="mt-3 rounded-card-lg bg-navy-deep px-6 py-20 text-white sm:px-10">
+    <section className="mt-3 rounded-card-lg bg-asphalt px-6 py-20 text-white sm:px-10">
         <Eyebrow tone="light">By the numbers</Eyebrow>
         <TextReveal
             as="h2"

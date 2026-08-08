@@ -58,7 +58,7 @@ const Hero = ({ businesses, searchTerm, onSearchTermChange, onSearch, ready }) =
     return (
         <section
             ref={sectionRef}
-            className="relative isolate flex min-h-[36rem] flex-col overflow-hidden rounded-card-lg bg-navy-deep text-white"
+            className="relative isolate flex min-h-[36rem] flex-col overflow-hidden rounded-card-lg bg-asphalt text-white"
             style={{ height: 'calc(100svh - 1rem)' }}
         >
             <div className="absolute inset-0 -z-10">
@@ -71,7 +71,7 @@ const Hero = ({ businesses, searchTerm, onSearchTermChange, onSearch, ready }) =
                         className="h-full w-full object-cover"
                     />
                 </motion.div>
-                <div className="absolute inset-0 bg-gradient-to-b from-navy-deep/65 via-navy-deep/35 to-navy-deep/75" />
+                <div className="absolute inset-0 bg-gradient-to-b from-asphalt/65 via-asphalt/35 to-asphalt/75" />
             </div>
 
             <div className="mt-24 px-6 sm:px-10">
@@ -116,7 +116,7 @@ const Hero = ({ businesses, searchTerm, onSearchTermChange, onSearch, ready }) =
                                     {HERO_STAT.dotColors.map((color, i) => (
                                         <span
                                             key={`${color}-${i}`}
-                                            className="h-5 w-5 rounded-pill border border-navy-deep/40"
+                                            className="h-5 w-5 rounded-pill border border-asphalt/40"
                                             style={{ backgroundColor: color }}
                                         />
                                     ))}
@@ -141,17 +141,17 @@ const Hero = ({ businesses, searchTerm, onSearchTermChange, onSearch, ready }) =
                         value={searchTerm}
                         onChange={(event) => onSearchTermChange(event.target.value)}
                         placeholder="City or area name"
-                        className="rounded-2xl border border-hairline bg-surface px-5 py-4 text-sm font-medium outline-none focus:border-navy-light"
+                        className="rounded-2xl border border-hairline bg-surface px-5 py-4 text-sm font-medium outline-none focus:border-ignition"
                     />
                 </label>
                 <div className="grid grid-cols-2 gap-3">
                     <label className="flex flex-col gap-1">
                         <span className="text-[11px] font-medium uppercase tracking-widest text-ink-soft">Arrival time</span>
-                        <input type="time" className="rounded-2xl border border-hairline bg-surface px-4 py-3 text-sm font-medium outline-none focus:border-navy-light" />
+                        <input type="time" className="rounded-2xl border border-hairline bg-surface px-4 py-3 text-sm font-medium outline-none focus:border-ignition" />
                     </label>
                     <label className="flex flex-col gap-1">
                         <span className="text-[11px] font-medium uppercase tracking-widest text-ink-soft">Duration</span>
-                        <select className="rounded-2xl border border-hairline bg-surface px-4 py-3 text-sm font-medium outline-none focus:border-navy-light">
+                        <select className="rounded-2xl border border-hairline bg-surface px-4 py-3 text-sm font-medium outline-none focus:border-ignition">
                             <option>Select duration</option>
                             <option>1 Hour</option>
                             <option>4 Hours</option>
@@ -161,9 +161,9 @@ const Hero = ({ businesses, searchTerm, onSearchTermChange, onSearch, ready }) =
                 </div>
                 <button
                     type="submit"
-                    className="inline-flex items-center gap-3 self-start rounded-pill bg-navy pl-2 pr-6 py-2 text-white shadow-sm transition-transform hover:scale-105 active:scale-95"
+                    className="inline-flex items-center gap-3 self-start rounded-pill bg-ignition pl-2 pr-6 py-2 text-white shadow-sm transition-transform hover:scale-105 active:scale-95"
                 >
-                    <span className="grid h-8 w-8 place-items-center rounded-pill bg-navy-deep">
+                    <span className="grid h-8 w-8 place-items-center rounded-pill bg-ignition-dark">
                         <Navigation className="h-3 w-3 rotate-45" aria-hidden="true" />
                     </span>
                     <span className="text-[11px] font-medium uppercase tracking-widest">Search</span>

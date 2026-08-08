@@ -27,7 +27,7 @@ const Testimonials = () => (
                     className="flex h-full flex-col justify-between rounded-card bg-surface p-7"
                 >
                     <div>
-                        <p className="text-4xl leading-none text-navy" aria-hidden="true">&ldquo;</p>
+                        <p className="text-4xl leading-none text-ignition" aria-hidden="true">&ldquo;</p>
                         <blockquote className="mt-4 text-lg leading-relaxed text-ink">{testimonial.quote}</blockquote>
                     </div>
                     <figcaption className="mt-6 border-t border-hairline pt-4">

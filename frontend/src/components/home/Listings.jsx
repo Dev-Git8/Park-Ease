@@ -32,7 +32,7 @@ const Listings = ({ businesses, loading }) => (
                             {biz.imageUrl ? (
                                 <img src={biz.imageUrl} alt={biz.name} loading="lazy" className="h-full w-full object-cover" />
                             ) : (
-                                <div className="h-full w-full bg-gradient-to-br from-navy-light to-navy-deep" />
+                                <div className="h-full w-full bg-gradient-to-br from-ignition-light to-asphalt" />
                             )}
                             <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/60 to-transparent p-5">
                                 <span className="inline-flex items-center gap-2 text-white">
@@ -44,7 +44,7 @@ const Listings = ({ businesses, loading }) => (
                         <div className="px-2 pb-2 pt-5">
                             <h3 className="text-2xl font-medium tracking-tight">{biz.name}</h3>
                             <p className="mt-2 flex items-center gap-2 text-xs text-ink-soft">
-                                <MapPin className="h-3.5 w-3.5 text-navy" aria-hidden="true" />
+                                <MapPin className="h-3.5 w-3.5 text-ignition" aria-hidden="true" />
                                 {biz.address}
                             </p>
                             <div className="mt-5 flex items-center justify-between border-t border-hairline pt-4">
@@ -57,7 +57,7 @@ const Listings = ({ businesses, loading }) => (
                                 </div>
                                 <Link
                                     to={`/business/${biz.id}`}
-                                    className="inline-flex items-center gap-2 rounded-pill bg-ink px-5 py-3 text-xs font-medium uppercase tracking-widest text-white transition-colors hover:bg-navy-deep"
+                                    className="inline-flex items-center gap-2 rounded-pill bg-ink px-5 py-3 text-xs font-medium uppercase tracking-widest text-white transition-colors hover:bg-ignition-dark"
                                 >
                                     Book Now
                                     <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

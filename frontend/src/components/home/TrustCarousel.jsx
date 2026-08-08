@@ -51,7 +51,7 @@ const TrustCarousel = () => {
                 preset="reveal"
                 className="relative z-10 mx-auto -mt-8 w-52 rotate-6 sm:-mt-16 sm:w-64"
             >
-                <figure className="relative aspect-[3/4] overflow-hidden rounded-card bg-navy">
+                <figure className="relative aspect-[3/4] overflow-hidden rounded-card bg-asphalt">
                     <AnimatePresence mode="wait">
                         <motion.img
                             key={slide.imageKey}
@@ -65,7 +65,7 @@ const TrustCarousel = () => {
                             className="h-full w-full object-cover"
                         />
                     </AnimatePresence>
-                    <figcaption className="absolute inset-x-3 bottom-3 rounded-xl bg-navy-deep/40 px-3 py-2 text-white backdrop-blur">
+                    <figcaption className="absolute inset-x-3 bottom-3 rounded-xl bg-asphalt/40 px-3 py-2 text-white backdrop-blur">
                         <p className="text-sm font-medium">{slide.name}</p>
                         <p className="text-[0.65rem] text-white/80">{slide.role}</p>
                     </figcaption>
