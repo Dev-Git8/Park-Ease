@@ -134,24 +134,24 @@ const Hero = ({ businesses, searchTerm, onSearchTermChange, onSearch, ready }) =
                 </div>
             </div>
 
-            <form onSubmit={onSearch} className="mx-6 mb-6 flex flex-col gap-4 rounded-card bg-white/95 p-6 text-ink shadow-xl sm:mx-10 sm:mb-8 sm:max-w-md">
+            <form onSubmit={onSearch} className="mx-6 mb-6 flex flex-col gap-3 rounded-card bg-white/95 p-4 text-ink shadow-xl sm:mx-10 sm:mb-8 sm:max-w-xs">
                 <label className="flex flex-col gap-1">
-                    <span className="text-[11px] font-medium uppercase tracking-widest text-ink-soft">Destination</span>
+                    <span className="text-[10px] font-medium uppercase tracking-widest text-ink-soft">Destination</span>
                     <input
                         value={searchTerm}
                         onChange={(event) => onSearchTermChange(event.target.value)}
                         placeholder="City or area name"
-                        className="rounded-2xl border border-hairline bg-surface px-5 py-4 text-sm font-medium outline-none focus:border-ignition"
+                        className="rounded-xl border border-hairline bg-surface px-4 py-2.5 text-xs font-medium outline-none focus:border-ignition"
                     />
                 </label>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2.5">
                     <label className="flex flex-col gap-1">
-                        <span className="text-[11px] font-medium uppercase tracking-widest text-ink-soft">Arrival time</span>
-                        <input type="time" className="rounded-2xl border border-hairline bg-surface px-4 py-3 text-sm font-medium outline-none focus:border-ignition" />
+                        <span className="text-[10px] font-medium uppercase tracking-widest text-ink-soft">Arrival time</span>
+                        <input type="time" className="rounded-xl border border-hairline bg-surface px-3 py-2 text-xs font-medium outline-none focus:border-ignition" />
                     </label>
                     <label className="flex flex-col gap-1">
-                        <span className="text-[11px] font-medium uppercase tracking-widest text-ink-soft">Duration</span>
-                        <select className="rounded-2xl border border-hairline bg-surface px-4 py-3 text-sm font-medium outline-none focus:border-ignition">
+                        <span className="text-[10px] font-medium uppercase tracking-widest text-ink-soft">Duration</span>
+                        <select className="rounded-xl border border-hairline bg-surface px-3 py-2 text-xs font-medium outline-none focus:border-ignition">
                             <option>Select duration</option>
                             <option>1 Hour</option>
                             <option>4 Hours</option>
@@ -161,12 +161,12 @@ const Hero = ({ businesses, searchTerm, onSearchTermChange, onSearch, ready }) =
                 </div>
                 <button
                     type="submit"
-                    className="inline-flex items-center gap-3 self-start rounded-pill bg-ignition pl-2 pr-6 py-2 text-white shadow-sm transition-transform hover:scale-105 active:scale-95"
+                    className="inline-flex items-center gap-2 self-start rounded-pill bg-ignition pl-1.5 pr-5 py-1.5 text-white shadow-sm transition-transform hover:scale-105 active:scale-95"
                 >
-                    <span className="grid h-8 w-8 place-items-center rounded-pill bg-ignition-dark">
+                    <span className="grid h-7 w-7 place-items-center rounded-pill bg-ignition-dark">
                         <Navigation className="h-3 w-3 rotate-45" aria-hidden="true" />
                     </span>
-                    <span className="text-[11px] font-medium uppercase tracking-widest">Search</span>
+                    <span className="text-[10px] font-medium uppercase tracking-widest">Search</span>
                 </button>
             </form>
         </section>
