@@ -47,7 +47,7 @@ const ContactModal = () => {
     return createPortal(
         <div className={`fixed inset-0 z-[90] flex items-end justify-center p-3 sm:items-center sm:p-6 ${isContactOpen ? '' : 'pointer-events-none'}`}>
             <motion.div
-                className="absolute inset-0 bg-navy-deep/40 backdrop-blur-sm"
+                className="absolute inset-0 bg-asphalt/40 backdrop-blur-sm"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: isContactOpen ? 1 : 0 }}
                 transition={{ type: 'spring', stiffness: 240, damping: 30 }}
@@ -88,7 +88,7 @@ const ContactModal = () => {
 
                 {status === 'sent' ? (
                     <div className="mt-8 rounded-card bg-surface p-6 text-center">
-                        <div className="mx-auto grid h-12 w-12 place-items-center rounded-pill bg-navy text-white">
+                        <div className="mx-auto grid h-12 w-12 place-items-center rounded-pill bg-ignition text-white">
                             <Check className="h-5 w-5" aria-hidden="true" />
                         </div>
                         <p className="mt-4 text-lg font-medium">Request received</p>
@@ -98,7 +98,7 @@ const ContactModal = () => {
                         <button
                             type="button"
                             onClick={closeContact}
-                            className="mt-6 rounded-pill bg-ink px-7 py-3.5 text-sm font-medium uppercase tracking-wide text-white transition-colors hover:bg-navy-deep"
+                            className="mt-6 rounded-pill bg-ink px-7 py-3.5 text-sm font-medium uppercase tracking-wide text-white transition-colors hover:bg-ignition-dark"
                         >
                             Done
                         </button>
@@ -113,7 +113,7 @@ const ContactModal = () => {
                                 value={name}
                                 onChange={(event) => setName(event.target.value)}
                                 placeholder="Alex Rivera"
-                                className="w-full rounded-xl border border-hairline bg-background px-4 py-3 text-sm focus:border-navy-light focus:outline-none"
+                                className="w-full rounded-xl border border-hairline bg-background px-4 py-3 text-sm focus:border-ignition focus:outline-none"
                             />
                         </label>
                         <label className="flex flex-col gap-2">
@@ -124,7 +124,7 @@ const ContactModal = () => {
                                 value={email}
                                 onChange={(event) => setEmail(event.target.value)}
                                 placeholder="you@email.com"
-                                className="w-full rounded-xl border border-hairline bg-background px-4 py-3 text-sm focus:border-navy-light focus:outline-none"
+                                className="w-full rounded-xl border border-hairline bg-background px-4 py-3 text-sm focus:border-ignition focus:outline-none"
                             />
                         </label>
                         <label className="flex flex-col gap-2">
@@ -134,13 +134,13 @@ const ContactModal = () => {
                                 value={message}
                                 onChange={(event) => setMessage(event.target.value)}
                                 placeholder="I have a 12-space lot near downtown I'd like to list…"
-                                className="w-full rounded-xl border border-hairline bg-background px-4 py-3 text-sm focus:border-navy-light focus:outline-none"
+                                className="w-full rounded-xl border border-hairline bg-background px-4 py-3 text-sm focus:border-ignition focus:outline-none"
                             />
                         </label>
                         <button
                             type="submit"
                             disabled={status === 'sending'}
-                            className="mt-2 rounded-pill bg-ink px-7 py-3.5 text-sm font-medium uppercase tracking-wide text-white transition-colors hover:bg-navy-deep disabled:opacity-50"
+                            className="mt-2 rounded-pill bg-ink px-7 py-3.5 text-sm font-medium uppercase tracking-wide text-white transition-colors hover:bg-ignition-dark disabled:opacity-50"
                         >
                             {status === 'sending' ? 'Sending…' : 'Request a visit'}
                         </button>

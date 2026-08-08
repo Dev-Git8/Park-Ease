@@ -65,7 +65,7 @@ const IntroLoader = ({ onReady }) => {
 
     return (
         <div
-            className={`fixed inset-0 z-[200] flex flex-col items-center justify-center gap-8 bg-navy-deep text-white transition-transform ${
+            className={`fixed inset-0 z-[200] flex flex-col items-center justify-center gap-8 bg-asphalt text-white transition-transform ${
                 exiting ? '-translate-y-[105%]' : 'translate-y-0'
             }`}
             style={{
