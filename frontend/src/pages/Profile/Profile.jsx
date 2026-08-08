@@ -105,7 +105,7 @@ const Profile = () => {
 
     if (loading) return (
         <div className="flex min-h-screen items-center justify-center bg-surface">
-            <div className="h-10 w-10 animate-spin rounded-full border-2 border-navy/30 border-t-navy" />
+            <div className="h-10 w-10 animate-spin rounded-full border-2 border-pulse/30 border-t-pulse" />
         </div>
     );
 
@@ -164,7 +164,7 @@ const Profile = () => {
                                                 <div className="flex gap-2">
                                                     <button
                                                         onClick={() => handleCheckout(booking.id)}
-                                                        className="flex items-center gap-2 rounded-pill bg-navy px-4 py-2 text-xs font-medium uppercase tracking-wide text-white hover:bg-navy-deep"
+                                                        className="flex items-center gap-2 rounded-pill bg-ignition px-4 py-2 text-xs font-medium uppercase tracking-wide text-white hover:bg-ignition-dark"
                                                     >
                                                         <LogOut size={14} aria-hidden="true" /> Check out
                                                     </button>
@@ -181,7 +181,7 @@ const Profile = () => {
                                                 <button
                                                     onClick={() => handleResumeBookingPayment(booking)}
                                                     disabled={isProcessing}
-                                                    className="flex items-center gap-2 rounded-pill bg-navy px-4 py-2 text-xs font-medium uppercase tracking-wide text-white hover:bg-navy-deep disabled:opacity-50"
+                                                    className="flex items-center gap-2 rounded-pill bg-ignition px-4 py-2 text-xs font-medium uppercase tracking-wide text-white hover:bg-ignition-dark disabled:opacity-50"
                                                 >
                                                     <CreditCard size={14} aria-hidden="true" /> Complete payment
                                                 </button>

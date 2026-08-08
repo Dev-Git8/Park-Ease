@@ -65,9 +65,9 @@ const CheckoutSummary = () => {
                             exit={{ opacity: 0, scale: 0.95 }}
                             className="overflow-hidden rounded-card-lg border border-hairline bg-white"
                         >
-                            <div className="relative bg-navy-deep p-8 text-white">
+                            <div className="relative bg-asphalt p-8 text-white">
                                 <Receipt className="absolute right-8 top-8 h-16 w-16 text-white/10" aria-hidden="true" />
-                                <Badge variant="navy" className="mb-4">Parking receipt</Badge>
+                                <Badge variant="ignition" className="mb-4">Parking receipt</Badge>
                                 <h1 className="font-outfit text-3xl font-medium tracking-tight sm:text-4xl">Booking summary</h1>
                                 <p className="mt-2 text-sm text-white/60">Booking #{id} · {business?.name}</p>
                             </div>

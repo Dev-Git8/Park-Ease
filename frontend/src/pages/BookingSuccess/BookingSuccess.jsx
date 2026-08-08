@@ -21,7 +21,7 @@ const BookingSuccess = () => {
                             initial={{ scale: 0, rotate: -45 }}
                             animate={{ scale: 1, rotate: 0 }}
                             transition={{ type: 'spring', stiffness: 200, damping: 20, delay: 0.2 }}
-                            className="relative z-10 grid h-24 w-24 place-items-center rounded-card bg-navy"
+                            className="relative z-10 grid h-24 w-24 place-items-center rounded-card bg-ignition"
                         >
                             <Check className="h-12 w-12 text-white" strokeWidth={3} aria-hidden="true" />
                         </motion.div>
