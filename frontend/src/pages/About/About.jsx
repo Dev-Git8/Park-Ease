@@ -24,7 +24,7 @@ const About = () => {
                 </motion.div>
             </section>
 
-            <section className="mx-6 mb-24 overflow-hidden rounded-card-lg bg-navy-deep py-24 text-white">
+            <section className="mx-6 mb-24 overflow-hidden rounded-card-lg bg-asphalt py-24 text-white">
                 <div className="mx-auto max-w-6xl px-10">
                     <div className="grid grid-cols-1 gap-16 md:grid-cols-3">
                         {[
@@ -62,7 +62,7 @@ const About = () => {
                             ].map((stat) => (
                                 <div key={stat.label} className="flex items-center gap-5">
                                     <div className="grid h-11 w-11 place-items-center rounded-card border border-hairline bg-surface">
-                                        <stat.icon className="h-5 w-5 text-navy" aria-hidden="true" />
+                                        <stat.icon className="h-5 w-5 text-ignition" aria-hidden="true" />
                                     </div>
                                     <div>
                                         <p className="text-xs uppercase tracking-widest text-ink-soft">{stat.label}</p>
@@ -74,8 +74,8 @@ const About = () => {
                     </div>
                     <div className="flex-1 rounded-card-lg border border-hairline bg-surface p-10">
                         <div className="flex aspect-square flex-col items-center justify-center rounded-card bg-white p-10 text-center">
-                            <div className="mb-6 grid h-20 w-20 place-items-center rounded-full bg-navy/10">
-                                <Car className="h-10 w-10 text-navy" aria-hidden="true" />
+                            <div className="mb-6 grid h-20 w-20 place-items-center rounded-full bg-ignition/10">
+                                <Car className="h-10 w-10 text-ignition" aria-hidden="true" />
                             </div>
                             <h4 className="font-outfit text-lg font-medium text-ink">List your lot</h4>
                             <p className="mt-2 text-sm text-ink-soft">Join the ParkEase network and start earning.</p>
