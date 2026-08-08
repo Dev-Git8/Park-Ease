@@ -11,19 +11,20 @@ export default {
           outfit: ['Outfit', 'sans-serif'],
         },
         colors: {
-          navy: {
-            DEFAULT: '#2563c9',
-            deep: '#0f2f63',
-            light: '#5790e6',
+          ignition: {
+            DEFAULT: '#FF6A2B',
+            dark: '#E5501A',
+            light: '#FF8A5B',
           },
-          harbor: '#0b6e97',
+          asphalt: '#15171c',
+          pulse: '#22D3EE',
           surface: {
-            DEFAULT: '#f4f4f4',
+            DEFAULT: '#f5f4f2',
             card: '#ffffff',
           },
           ink: {
-            DEFAULT: '#0a0a0a',
-            soft: '#717784',
+            DEFAULT: '#0d0d0f',
+            soft: '#6b7280',
           },
           ghost: '#d7dae1',
           hairline: '#e6e8ec',
@@ -35,7 +36,16 @@ export default {
           card: '1.5rem',
           'card-lg': '2rem',
           pill: '62.5rem',
-        }
+        },
+        keyframes: {
+          'glow-pulse': {
+            '0%': { boxShadow: '0 0 0 0 rgba(34, 211, 238, 0.55)' },
+            '100%': { boxShadow: '0 0 0 14px rgba(34, 211, 238, 0)' },
+          },
+        },
+        animation: {
+          'glow-pulse': 'glow-pulse 1.2s ease-out 2',
+        },
       },
     },
     plugins: [],

@@ -5,8 +5,8 @@ import { FACILITIES } from '../../data/homeContent';
 import { IMAGES } from '../../data/images';
 
 const TONE_CAPTION_CLASSES = {
-    clay: 'bg-navy-deep/40',
-    blue: 'bg-harbor/55',
+    clay: 'bg-asphalt/40',
+    blue: 'bg-pulse/55',
 };
 
 const Facilities = () => (
