@@ -10,7 +10,7 @@ const Input = ({ label, icon: Icon, error, className = '', ...props }) => {
             )}
             <div className="relative group">
                 {Icon && (
-                    <div className="absolute left-5 top-1/2 -translate-y-1/2 text-ink-soft transition-colors group-focus-within:text-navy">
+                    <div className="absolute left-5 top-1/2 -translate-y-1/2 text-ink-soft transition-colors group-focus-within:text-ignition">
                         <Icon size={18} />
                     </div>
                 )}
@@ -19,7 +19,7 @@ const Input = ({ label, icon: Icon, error, className = '', ...props }) => {
                         w-full bg-background border border-hairline
                         py-4 ${Icon ? 'pl-14' : 'px-6'} pr-6 rounded-2xl text-sm font-medium text-ink
                         placeholder:text-ink-soft/60
-                        focus:outline-none focus:border-navy-light
+                        focus:outline-none focus:border-ignition
                         transition-colors duration-300
                         ${error ? 'border-red-500' : ''}
                     `}

@@ -4,8 +4,8 @@ const TEXT_TONES = {
 };
 
 const DOT_TONES = {
-    dark: 'bg-navy',
-    light: 'bg-navy-light',
+    dark: 'bg-ignition',
+    light: 'bg-ignition-light',
 };
 
 const Eyebrow = ({ children, tone = 'dark', className = '' }) => (

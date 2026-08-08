@@ -11,9 +11,9 @@ describe('Button', () => {
         expect(onClick).toHaveBeenCalledTimes(1);
     });
 
-    it('applies the navy primary variant by default', () => {
+    it('applies the ignition primary variant by default', () => {
         render(<Button>Confirm</Button>);
-        expect(screen.getByRole('button', { name: 'Confirm' })).toHaveClass('bg-navy');
+        expect(screen.getByRole('button', { name: 'Confirm' })).toHaveClass('bg-ignition');
     });
 
     it('applies the secondary variant classes', () => {

@@ -5,7 +5,7 @@ const Badge = ({ children, variant = 'slate', className = '' }) => {
         success: "bg-emerald-50 text-emerald-600",
         warning: "bg-amber-50 text-amber-600",
         danger: "bg-red-50 text-red-600",
-        navy: "bg-navy text-white",
+        ignition: "bg-ignition text-white",
         accent: "bg-ink text-white",
         slate: "bg-surface text-ink-soft"
     };

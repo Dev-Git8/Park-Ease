@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react';
 
 const VARIANTS = {
     outline: 'border border-hairline text-ink hover:border-ink',
-    solid: 'bg-ink border border-ink text-white hover:bg-navy-deep',
+    solid: 'bg-ink border border-ink text-white hover:bg-ignition-dark',
 };
 
 const ArrowButton = ({ direction = 'next', variant = 'outline', onClick, className = '', ...rest }) => (

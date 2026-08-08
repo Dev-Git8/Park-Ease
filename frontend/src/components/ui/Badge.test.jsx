@@ -8,9 +8,9 @@ describe('Badge', () => {
         expect(screen.getByText('Active')).toBeInTheDocument();
     });
 
-    it('applies the navy variant classes', () => {
-        render(<Badge variant="navy">Featured</Badge>);
-        expect(screen.getByText('Featured')).toHaveClass('bg-navy');
+    it('applies the ignition variant classes', () => {
+        render(<Badge variant="ignition">Featured</Badge>);
+        expect(screen.getByText('Featured')).toHaveClass('bg-ignition');
     });
 
     it('defaults to the slate variant', () => {

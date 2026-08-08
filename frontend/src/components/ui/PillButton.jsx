@@ -2,8 +2,8 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
 const VARIANTS = {
-    light: 'bg-white text-navy-deep hover:bg-navy-light hover:text-white',
-    solid: 'bg-ink text-white hover:bg-navy-deep',
+    light: 'bg-white text-ignition-dark hover:bg-ignition-light hover:text-white',
+    solid: 'bg-ink text-white hover:bg-ignition-dark',
     outline: 'border border-current text-ink hover:bg-ink hover:text-white',
 };
 

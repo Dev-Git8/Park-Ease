@@ -17,6 +17,6 @@ describe('StatCard', () => {
 
     it('applies the dark tone background', () => {
         render(<StatCard label="Users" value="10" tone="dark" />);
-        expect(screen.getByText('Users').closest('div.rounded-card')).toHaveClass('bg-navy-deep');
+        expect(screen.getByText('Users').closest('div.rounded-card')).toHaveClass('bg-asphalt');
     });
 });
