@@ -28,7 +28,7 @@ const Footer = () => {
     const { openContact } = useSiteUI();
 
     return (
-        <footer id="contact" className="mt-3 rounded-card-lg bg-navy-deep px-6 py-14 text-white sm:px-10 sm:py-16">
+        <footer id="contact" className="mt-3 rounded-card-lg bg-asphalt px-6 py-14 text-white sm:px-10 sm:py-16">
             <div className="flex flex-col gap-8 border-b border-white/15 pb-14 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                     <Eyebrow tone="light">Get started</Eyebrow>

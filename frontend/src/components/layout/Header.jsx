@@ -27,7 +27,7 @@ const Header = () => {
     return (
         <header
             className={`sticky top-0 z-50 flex items-center justify-between px-6 py-6 text-xs transition-colors duration-300 sm:px-10 ${
-                transparent ? 'bg-transparent text-white' : 'bg-navy-deep text-white shadow-md'
+                transparent ? 'bg-transparent text-white' : 'bg-asphalt text-white shadow-md'
             }`}
         >
             <nav className="hidden flex-1 items-center gap-8 md:flex">

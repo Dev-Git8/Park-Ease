@@ -24,7 +24,7 @@ const MobileMenu = () => {
     return createPortal(
         <div className={`fixed inset-0 z-[70] flex flex-col ${isMenuOpen ? '' : 'pointer-events-none'}`}>
             <motion.div
-                className="absolute inset-0 bg-navy-deep"
+                className="absolute inset-0 bg-asphalt"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: isMenuOpen ? 1 : 0 }}
                 transition={{ type: 'spring', stiffness: 260, damping: 30 }}
@@ -57,7 +57,7 @@ const MobileMenu = () => {
                             <Link
                                 to={link.to}
                                 onClick={closeMenu}
-                                className="block text-5xl font-medium leading-tight tracking-tight transition-colors hover:text-navy-light sm:text-7xl"
+                                className="block text-5xl font-medium leading-tight tracking-tight transition-colors hover:text-ignition-light sm:text-7xl"
                             >
                                 {link.name}
                             </Link>
