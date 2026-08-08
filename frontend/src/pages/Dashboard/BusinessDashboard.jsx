@@ -199,7 +199,7 @@ const BusinessDashboard = () => {
 
     if (loading) return (
         <div className="flex min-h-screen items-center justify-center bg-surface">
-            <div className="h-10 w-10 animate-spin rounded-full border-2 border-navy/30 border-t-navy" />
+            <div className="h-10 w-10 animate-spin rounded-full border-2 border-pulse/30 border-t-pulse" />
         </div>
     );
 
@@ -207,7 +207,7 @@ const BusinessDashboard = () => {
         <button
             onClick={() => setActiveTab(id)}
             className={`flex w-full items-center gap-4 rounded-2xl px-6 py-4 transition-colors ${
-                activeTab === id ? 'bg-navy text-white' : 'text-ink-soft hover:bg-surface hover:text-ink'
+                activeTab === id ? 'bg-ignition text-white' : 'text-ink-soft hover:bg-surface hover:text-ink'
             }`}
         >
             <Icon size={20} aria-hidden="true" />
@@ -220,13 +220,13 @@ const BusinessDashboard = () => {
 
             <AnimatePresence>
                 {showBusinessSetup && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-navy-deep/60 p-6 backdrop-blur-sm">
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-asphalt/60 p-6 backdrop-blur-sm">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             className="w-full max-w-xl rounded-card-lg bg-white p-10 sm:p-12"
                         >
-                            <Badge variant="navy" className="mb-6">Action required</Badge>
+                            <Badge variant="ignition" className="mb-6">Action required</Badge>
                             <h2 className="font-outfit text-3xl font-medium tracking-tight text-ink">Set up your parking location</h2>
                             <p className="mt-3 text-sm text-ink-soft">
                                 Before you can access the dashboard, tell us about your facility.
@@ -270,7 +270,7 @@ const BusinessDashboard = () => {
 
                                 <div className="space-y-2">
                                     <label className="block px-1 text-xs font-medium uppercase tracking-[0.18em] text-ink-soft">Photo</label>
-                                    <div className="relative flex h-32 w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-hairline hover:border-navy-light">
+                                    <div className="relative flex h-32 w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-hairline hover:border-ignition">
                                         {bizForm.image ? (
                                             <img src={URL.createObjectURL(bizForm.image)} className="h-full w-full object-cover" alt="Preview" />
                                         ) : (
@@ -297,7 +297,7 @@ const BusinessDashboard = () => {
                 )}
 
                 {showAddSlots && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-navy-deep/60 p-6 backdrop-blur-sm">
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-asphalt/60 p-6 backdrop-blur-sm">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
@@ -310,7 +310,7 @@ const BusinessDashboard = () => {
                             >
                                 <X size={22} aria-hidden="true" />
                             </button>
-                            <Badge variant="navy" className="mb-6">Scale your facility</Badge>
+                            <Badge variant="ignition" className="mb-6">Scale your facility</Badge>
                             <h2 className="font-outfit text-2xl font-medium tracking-tight text-ink">Add new slots</h2>
                             <p className="mt-2 text-sm text-ink-soft">Generate a sequence of parking slot numbers.</p>
 
@@ -355,7 +355,7 @@ const BusinessDashboard = () => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-navy-deep/60 p-6 backdrop-blur-sm"
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-asphalt/60 p-6 backdrop-blur-sm"
                     >
                         <motion.div
                             initial={{ scale: 0.9, y: 20 }}
@@ -368,7 +368,7 @@ const BusinessDashboard = () => {
                             </button>
 
                             <div className="mb-6 grid h-14 w-14 place-items-center rounded-card bg-surface">
-                                <Settings className="text-navy" size={26} aria-hidden="true" />
+                                <Settings className="text-ignition" size={26} aria-hidden="true" />
                             </div>
                             <h2 className="font-outfit text-3xl font-medium tracking-tight text-ink">Manage profile</h2>
                             <p className="mt-2 text-sm text-ink-soft">Update your display info and parking rates</p>
@@ -399,7 +399,7 @@ const BusinessDashboard = () => {
 
                                 <div className="space-y-2">
                                     <label className="block px-1 text-xs font-medium uppercase tracking-[0.18em] text-ink-soft">Photo</label>
-                                    <div className="relative flex h-32 w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-hairline hover:border-navy-light">
+                                    <div className="relative flex h-32 w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-hairline hover:border-ignition">
                                         {editForm.image ? (
                                             <img src={URL.createObjectURL(editForm.image)} className="h-full w-full object-cover" alt="Preview" />
                                         ) : business?.imageUrl ? (
@@ -431,7 +431,7 @@ const BusinessDashboard = () => {
             <aside className="sticky top-0 flex h-screen w-72 flex-col justify-between border-r border-hairline bg-white p-8">
                 <div className="space-y-10">
                     <div className="flex items-center gap-3">
-                        <div className="grid h-10 w-10 place-items-center rounded-card bg-navy text-white">
+                        <div className="grid h-10 w-10 place-items-center rounded-card bg-ignition text-white">
                             <Car size={22} aria-hidden="true" />
                         </div>
                         <span className="font-outfit text-lg font-medium tracking-tight text-ink">ParkEase</span>
@@ -463,7 +463,7 @@ const BusinessDashboard = () => {
                         <p className="mt-1 text-sm text-ink-soft">Business ID: {business?.id || 'Pending'}</p>
                     </div>
                     <div className="flex items-center gap-4">
-                        <button className="grid h-11 w-11 place-items-center rounded-card border border-hairline bg-white text-ink-soft hover:text-navy">
+                        <button className="grid h-11 w-11 place-items-center rounded-card border border-hairline bg-white text-ink-soft hover:text-ignition">
                             <Bell size={18} aria-hidden="true" />
                         </button>
                         <Button variant="secondary" size="md" onClick={openEditModal}>
@@ -492,7 +492,7 @@ const BusinessDashboard = () => {
                         <div className="flex items-center gap-3">
                             <div className="relative">
                                 <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft" aria-hidden="true" />
-                                <input placeholder="Search slot #…" className="rounded-pill border border-hairline bg-surface py-2.5 pl-10 pr-5 text-xs text-ink focus:border-navy-light focus:outline-none" />
+                                <input placeholder="Search slot #…" className="rounded-pill border border-hairline bg-surface py-2.5 pl-10 pr-5 text-xs text-ink focus:border-ignition focus:outline-none" />
                             </div>
                             <Button variant="secondary" size="sm">Export data</Button>
                         </div>
@@ -533,9 +533,9 @@ const BusinessDashboard = () => {
                                             </td>
                                             <td className="px-8 py-5">
                                                 <div className="flex items-center gap-2">
-                                                    <span className={`h-2 w-2 rounded-full ${slot.isAvailable ? 'bg-emerald-500' : 'bg-red-500'}`} />
-                                                    <span className={`text-xs font-medium uppercase tracking-wide ${slot.isAvailable ? 'text-emerald-600' : 'text-red-500'}`}>
-                                                        {slot.isAvailable ? 'Available' : 'Occupied'}
+                                                    <span className={`h-2 w-2 rounded-full ${slot.status === 'available' ? 'bg-emerald-500' : 'bg-red-500'}`} />
+                                                    <span className={`text-xs font-medium uppercase tracking-wide ${slot.status === 'available' ? 'text-emerald-600' : 'text-red-500'}`}>
+                                                        {slot.status === 'available' ? 'Available' : 'Occupied'}
                                                     </span>
                                                 </div>
                                             </td>
@@ -555,7 +555,7 @@ const BusinessDashboard = () => {
                                                             <span className="text-sm text-ink">
                                                                 {sTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} – {eTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                                                             </span>
-                                                            <span className="mt-1 text-xs text-navy">{active.status === 'overdue' ? 'Overdue' : `Booked for ${durationLabel}`}</span>
+                                                            <span className="mt-1 text-xs text-ignition">{active.status === 'overdue' ? 'Overdue' : `Booked for ${durationLabel}`}</span>
                                                         </div>
                                                     );
                                                 })()}
@@ -564,13 +564,13 @@ const BusinessDashboard = () => {
                                                 <div className="flex items-center justify-end gap-2">
                                                     <button
                                                         onClick={() => handleDeleteSlot(slot.id)}
-                                                        disabled={!slot.isAvailable}
-                                                        className={`p-2 ${slot.isAvailable ? 'text-ink-soft hover:text-red-500' : 'cursor-not-allowed text-ghost'}`}
-                                                        title={slot.isAvailable ? 'Delete slot' : 'Cannot delete an occupied slot'}
+                                                        disabled={slot.status !== 'available'}
+                                                        className={`p-2 ${slot.status === 'available' ? 'text-ink-soft hover:text-red-500' : 'cursor-not-allowed text-ghost'}`}
+                                                        title={slot.status === 'available' ? 'Delete slot' : 'Cannot delete an occupied slot'}
                                                     >
                                                         <Trash2 size={16} aria-hidden="true" />
                                                     </button>
-                                                    <button className="p-2 text-ink-soft hover:text-navy">
+                                                    <button className="p-2 text-ink-soft hover:text-ignition">
                                                         <MoreHorizontal size={18} aria-hidden="true" />
                                                     </button>
                                                 </div>
