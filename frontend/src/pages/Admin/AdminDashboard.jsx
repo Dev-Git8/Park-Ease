@@ -61,7 +61,7 @@ const AdminDashboard = () => {
 
     if (loading) return (
         <div className="flex min-h-screen items-center justify-center bg-surface">
-            <div className="h-10 w-10 animate-spin rounded-full border-2 border-navy/30 border-t-navy" />
+            <div className="h-10 w-10 animate-spin rounded-full border-2 border-pulse/30 border-t-pulse" />
         </div>
     );
 
@@ -69,7 +69,7 @@ const AdminDashboard = () => {
         <button
             onClick={() => setActiveTab(id)}
             className={`flex w-full items-center gap-4 rounded-2xl px-6 py-4 transition-colors ${
-                activeTab === id ? 'bg-navy text-white' : 'text-ink-soft hover:bg-surface hover:text-ink'
+                activeTab === id ? 'bg-ignition text-white' : 'text-ink-soft hover:bg-surface hover:text-ink'
             }`}
         >
             <Icon size={20} aria-hidden="true" />
@@ -82,7 +82,7 @@ const AdminDashboard = () => {
             <aside className="sticky top-0 flex h-screen w-72 flex-col justify-between border-r border-hairline bg-white p-8">
                 <div className="space-y-10">
                     <div className="flex items-center gap-3">
-                        <div className="grid h-10 w-10 place-items-center rounded-card bg-navy text-white">
+                        <div className="grid h-10 w-10 place-items-center rounded-card bg-ignition text-white">
                             <ShieldCheck size={22} aria-hidden="true" />
                         </div>
                         <span className="font-outfit text-lg font-medium tracking-tight text-ink">Admin</span>
@@ -116,7 +116,7 @@ const AdminDashboard = () => {
                     </div>
                     <div className="flex items-center gap-4">
                         <div className="relative">
-                            <button className="grid h-11 w-11 place-items-center rounded-card border border-hairline bg-white text-ink-soft hover:text-navy">
+                            <button className="grid h-11 w-11 place-items-center rounded-card border border-hairline bg-white text-ink-soft hover:text-ignition">
                                 <Bell size={18} aria-hidden="true" />
                             </button>
                             {stats.pending > 0 && <span className="absolute right-0 top-0 h-2.5 w-2.5 rounded-full border-2 border-white bg-red-500" />}
@@ -139,7 +139,7 @@ const AdminDashboard = () => {
                         <div className="flex items-center gap-3">
                             <div className="relative">
                                 <SearchIcon className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft" aria-hidden="true" />
-                                <input placeholder="Search records…" className="rounded-pill border border-hairline bg-surface py-2.5 pl-10 pr-5 text-xs text-ink focus:border-navy-light focus:outline-none" />
+                                <input placeholder="Search records…" className="rounded-pill border border-hairline bg-surface py-2.5 pl-10 pr-5 text-xs text-ink focus:border-ignition focus:outline-none" />
                             </div>
                             <Button variant="secondary" size="sm">Export</Button>
                         </div>
@@ -174,7 +174,7 @@ const AdminDashboard = () => {
                                                 <Badge variant={
                                                     biz.status === 'approved' ? 'success' :
                                                     biz.status === 'rejected' ? 'danger' :
-                                                    'navy'
+                                                    'ignition'
                                                 }>
                                                     {biz.status}
                                                 </Badge>
@@ -223,7 +223,7 @@ const AdminDashboard = () => {
                                             </td>
                                             <td className="px-8 py-6">
                                                 <Badge variant={
-                                                    u.role === 'admin' ? 'navy' :
+                                                    u.role === 'admin' ? 'ignition' :
                                                     u.role === 'business' ? 'accent' :
                                                     'slate'
                                                 }>
