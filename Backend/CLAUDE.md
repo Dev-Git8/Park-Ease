@@ -364,3 +364,51 @@ the very flows this plan needed to verify):**
   backend plan verified its own Razorpay integration.
 - The sitewide "Midnight Garage" visual overhaul is the third and final
   plan in the sequence - not started yet.
+
+### Session notes (2026-08-08, continued — Midnight Garage visual overhaul)
+
+Third and final plan in the 2026-08-08 sequence complete:
+`docs/superpowers/plans/2026-08-08-midnight-garage-visual-overhaul.md`. All
+13 tasks done. Every `navy`/`navy-deep`/`navy-light`/`harbor` Tailwind
+token across the entire frontend (~20 files: UI atoms, layout, overlays,
+every home-page component, both auth pages, the booking flow, both
+dashboards, About) replaced with the car-themed Midnight Garage palette -
+`ignition` (orange, accent/action), `asphalt` (near-black, dark surfaces),
+`pulse` (electric cyan, live/loading signal). This was a per-instance
+remap, not a blind find-replace: the same old token played different
+roles in different places (accent vs. neutral placeholder background,
+light-surface vs. dark-surface contrast needs), resolved by reading every
+affected file in full before writing the plan.
+
+Also added the motion/detail language from the design spec: a cyan
+glow-pulse animation on `BusinessDetails.jsx`'s slot grid when a slot
+flips to `available` via the real-time socket update; `tabular-nums` plus
+a small ignition tick accent on `StatCard`; a directional slide+fade on
+every route change (`App.jsx`, via `AnimatePresence`); a soft ignition-hued
+glow on primary button hover.
+
+**A second `slot.isAvailable` vs. `slot.status` sync bug found and fixed**
+while retheming `BusinessDashboard.jsx`: the business-owner-facing slot
+table still read the old `isAvailable` boolean field (removed from the
+backend a while ago), so every slot always rendered as "Occupied"
+regardless of its real status. The customer-facing `BusinessDetails.jsx`
+page had already been fixed for this in the frontend-sync plan; this
+business-owner-facing table was missed at the time and only surfaced now
+because retheming required reading every line of the file.
+
+Full verification: sitewide grep for `navy`/`harbor` returns zero hits;
+full frontend test suite green (27 suites, 97 tests - one timeout in
+`Home.test.jsx` under full-suite resource contention was confirmed flaky,
+not a regression, by re-running both in isolation and as a full re-run);
+`eslint` clean (only the two pre-existing `BusinessDetails.jsx`
+`exhaustive-deps` warnings, unrelated to this work); production build
+succeeds; Playwright-driven visual walkthrough across Home, a business
+details page, Register, About, and route transitions confirmed the new
+palette renders correctly everywhere with no console errors.
+
+**This closes out the full three-plan sequence started earlier today**:
+Stripe → Razorpay backend migration, frontend payment sync, and the
+Midnight Garage visual overhaul. The backend and frontend are now in sync
+on every contract this session touched, real payments work end-to-end
+against the (still placeholder) Razorpay keys' fails-safe path, and the
+whole site shares one consistent car-themed visual language.
