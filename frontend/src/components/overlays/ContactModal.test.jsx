@@ -24,8 +24,9 @@ describe('ContactModal', () => {
         expect(screen.getByRole('dialog', { hidden: true }).parentElement).toHaveClass('pointer-events-none');
     });
 
-    it('submits the form as a local stub without calling the api module', async () => {
+    it('submits the form to the real API and shows the confirmation on success', async () => {
         const api = (await import('../../api/api')).default;
+        api.post.mockResolvedValueOnce({ data: { success: true, data: { id: 1 } } });
         const user = userEvent.setup();
         render(<SiteUIProvider><Harness /></SiteUIProvider>);
 
@@ -34,12 +35,28 @@ describe('ContactModal', () => {
         await user.type(screen.getByPlaceholderText('you@email.com'), 'jamie@example.com');
         await user.click(screen.getByRole('button', { name: /request a visit/i }));
 
-        expect(screen.getByText(/sending/i)).toBeInTheDocument();
-        expect(await screen.findByText('Request received', {}, { timeout: 2000 })).toBeInTheDocument();
+        expect(await screen.findByText('Request received')).toBeInTheDocument();
         expect(screen.getByText(/thanks, jamie/i)).toBeInTheDocument();
 
-        expect(api.get).not.toHaveBeenCalled();
-        expect(api.post).not.toHaveBeenCalled();
+        expect(api.post).toHaveBeenCalledWith('/visit-requests', {
+            name: 'Jamie Fox',
+            email: 'jamie@example.com',
+            message: '',
+        });
+    });
+
+    it('shows an error message when the submission fails', async () => {
+        const api = (await import('../../api/api')).default;
+        api.post.mockRejectedValueOnce({ response: { data: { message: 'Too many visit requests. Please try again later.' } } });
+        const user = userEvent.setup();
+        render(<SiteUIProvider><Harness /></SiteUIProvider>);
+
+        await user.click(screen.getByText('open'));
+        await user.type(screen.getByPlaceholderText('Alex Rivera'), 'Jamie Fox');
+        await user.type(screen.getByPlaceholderText('you@email.com'), 'jamie@example.com');
+        await user.click(screen.getByRole('button', { name: /request a visit/i }));
+
+        expect(await screen.findByText('Too many visit requests. Please try again later.')).toBeInTheDocument();
     });
 
     it('closes on Escape', async () => {

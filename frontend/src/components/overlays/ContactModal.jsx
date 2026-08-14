@@ -5,6 +5,7 @@ import { Check, X } from 'lucide-react';
 import Eyebrow from '../ui/Eyebrow';
 import TextReveal, { TEXT_EASE } from '../ui/TextReveal';
 import { useSiteUI } from '../../context/SiteUIContext';
+import api from '../../api/api';
 
 const ContactModal = () => {
     const { isContactOpen, closeContact } = useSiteUI();
@@ -12,6 +13,7 @@ const ContactModal = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     const nameInputRef = useRef(null);
 
     useEffect(() => {
@@ -34,14 +36,22 @@ const ContactModal = () => {
             setName('');
             setEmail('');
             setMessage('');
+            setErrorMessage('');
         }, 350);
         return () => window.clearTimeout(resetTimer);
     }, [isContactOpen]);
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         setStatus('sending');
-        window.setTimeout(() => setStatus('sent'), 600);
+        setErrorMessage('');
+        try {
+            await api.post('/visit-requests', { name, email, message });
+            setStatus('sent');
+        } catch (err) {
+            setStatus('idle');
+            setErrorMessage(err.response?.data?.message || 'Something went wrong. Please try again.');
+        }
     };
 
     return createPortal(
@@ -137,6 +147,9 @@ const ContactModal = () => {
                                 className="w-full rounded-xl border border-hairline bg-background px-4 py-3 text-sm focus:border-ignition focus:outline-none"
                             />
                         </label>
+                        {errorMessage && (
+                            <p className="text-sm text-red-500">{errorMessage}</p>
+                        )}
                         <button
                             type="submit"
                             disabled={status === 'sending'}
