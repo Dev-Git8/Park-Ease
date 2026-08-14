@@ -22,22 +22,28 @@ const AdminDashboard = () => {
     const [stats, setStats] = useState({ users: 0, businesses: 0, pending: 0 });
     const [businesses, setBusinesses] = useState([]);
     const [users, setUsers] = useState([]);
+    const [visitRequests, setVisitRequests] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('businesses');
 
     const fetchData = async () => {
         try {
-            const [bizRes, usersRes] = await Promise.all([
+            const [bizRes, usersRes, visitRes] = await Promise.all([
                 api.get('/admin/businesses'),
-                api.get('/admin/users')
+                api.get('/admin/users'),
+                api.get('/visit-requests'),
             ]);
             setBusinesses(bizRes.data.data);
             setUsers(usersRes.data.data);
+            setVisitRequests(visitRes.data.data);
+
+            const pendingBusinesses = bizRes.data.data.filter(b => b.status === 'pending').length;
+            const pendingVisitRequests = visitRes.data.data.filter(v => v.status === 'pending').length;
 
             setStats({
                 users: usersRes.data.data.length,
                 businesses: bizRes.data.data.length,
-                pending: bizRes.data.data.filter(b => b.status === 'pending').length
+                pending: pendingBusinesses + pendingVisitRequests,
             });
         } catch (error) {
             console.error('Error fetching admin data', error);
@@ -56,6 +62,18 @@ const AdminDashboard = () => {
             fetchData();
         } catch {
             alert('Failed to update status');
+        }
+    };
+
+    const handleVisitRequestStatusUpdate = async (id, status) => {
+        try {
+            const res = await api.put(`/visit-requests/${id}/status`, { status });
+            if (res.data.emailDelivered === false) {
+                alert('Status updated, but the notification email failed to send — let them know another way.');
+            }
+            fetchData();
+        } catch {
+            alert('Failed to update visit request');
         }
     };
 
@@ -91,6 +109,7 @@ const AdminDashboard = () => {
                     <div className="space-y-2">
                         <SidebarItem icon={Building2} label="Parking locations" id="businesses" />
                         <SidebarItem icon={Users} label="User accounts" id="users" />
+                        <SidebarItem icon={Clock} label="Visit requests" id="visitRequests" />
                     </div>
                 </div>
 
@@ -205,7 +224,7 @@ const AdminDashboard = () => {
                                     ))}
                                 </tbody>
                             </table>
-                        ) : (
+                        ) : activeTab === 'users' ? (
                             <table className="w-full text-left">
                                 <thead className="bg-surface">
                                     <tr>
@@ -232,6 +251,59 @@ const AdminDashboard = () => {
                                             </td>
                                             <td className="px-8 py-6 text-right text-sm text-ink-soft">
                                                 {new Date(u.createdAt).toLocaleDateString()}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        ) : (
+                            <table className="w-full text-left">
+                                <thead className="bg-surface">
+                                    <tr>
+                                        <th className="px-8 py-4 text-xs font-medium uppercase tracking-wide text-ink-soft">Name</th>
+                                        <th className="px-8 py-4 text-xs font-medium uppercase tracking-wide text-ink-soft">Email</th>
+                                        <th className="px-8 py-4 text-xs font-medium uppercase tracking-wide text-ink-soft">Message</th>
+                                        <th className="px-8 py-4 text-center text-xs font-medium uppercase tracking-wide text-ink-soft">Status</th>
+                                        <th className="px-8 py-4 text-right text-xs font-medium uppercase tracking-wide text-ink-soft">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-hairline">
+                                    {visitRequests.map((v) => (
+                                        <tr key={v.id} className="hover:bg-surface/60">
+                                            <td className="px-8 py-6">
+                                                <div className="font-outfit text-lg font-medium text-ink">{v.name}</div>
+                                                <div className="mt-1 text-xs text-ink-soft">{new Date(v.createdAt).toLocaleDateString()}</div>
+                                            </td>
+                                            <td className="px-8 py-6 text-sm text-ink-soft">{v.email}</td>
+                                            <td className="px-8 py-6 max-w-xs truncate text-sm text-ink-soft">{v.message || '—'}</td>
+                                            <td className="px-8 py-6 text-center">
+                                                <Badge variant={
+                                                    v.status === 'approved' ? 'success' :
+                                                    v.status === 'rejected' ? 'danger' :
+                                                    'ignition'
+                                                }>
+                                                    {v.status}
+                                                </Badge>
+                                            </td>
+                                            <td className="px-8 py-6 text-right">
+                                                {v.status === 'pending' ? (
+                                                    <div className="flex items-center justify-end gap-2">
+                                                        <button
+                                                            onClick={() => handleVisitRequestStatusUpdate(v.id, 'approved')}
+                                                            className="grid h-9 w-9 place-items-center rounded-full bg-emerald-50 text-emerald-600 hover:bg-emerald-500 hover:text-white"
+                                                        >
+                                                            <CheckCircle size={16} aria-hidden="true" />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleVisitRequestStatusUpdate(v.id, 'rejected')}
+                                                            className="grid h-9 w-9 place-items-center rounded-full bg-red-50 text-red-500 hover:bg-red-500 hover:text-white"
+                                                        >
+                                                            <XCircle size={16} aria-hidden="true" />
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-sm text-ink-soft">—</span>
+                                                )}
                                             </td>
                                         </tr>
                                     ))}
