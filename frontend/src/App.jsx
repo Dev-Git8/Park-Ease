@@ -12,6 +12,7 @@ import ContactModal from './components/overlays/ContactModal';
 import Home from './pages/Home/Home';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
+import SetPassword from './pages/SetPassword/SetPassword';
 import Profile from './pages/Profile/Profile';
 import BusinessDetails from './pages/Home/BusinessDetails';
 import BookingSuccess from './pages/BookingSuccess/BookingSuccess';
@@ -74,6 +75,7 @@ const AppContent = () => {
                                 <Route path="/" element={<Home />} />
                                 <Route path="/login" element={<Login />} />
                                 <Route path="/register" element={<Register />} />
+                                <Route path="/set-password" element={<SetPassword />} />
                                 <Route path="/business/:id" element={<BusinessDetails />} />
                                 <Route path="/booking-success" element={<BookingSuccess />} />
                                 <Route path="/about" element={<About />} />
