@@ -1,16 +1,32 @@
 const prisma = require('../../config/prisma');
 
 const createBusiness = async (ownerId, name, address, totalSlots, price, imageUrl = null) => {
-    return await prisma.business.create({
-        data: {
-            ownerId: parseInt(ownerId),
-            name,
-            address,
-            totalSlots: parseInt(totalSlots),
-            pricePerHour: parseFloat(price),
-            status: 'pending',
-            imageUrl,
-        },
+    const slotCount = parseInt(totalSlots) || 0;
+
+    return await prisma.$transaction(async (tx) => {
+        const business = await tx.business.create({
+            data: {
+                ownerId: parseInt(ownerId),
+                name,
+                address,
+                totalSlots: slotCount,
+                pricePerHour: parseFloat(price),
+                status: 'pending',
+                imageUrl,
+            },
+        });
+
+        if (slotCount > 0) {
+            await tx.slot.createMany({
+                data: Array.from({ length: slotCount }, (_, i) => ({
+                    businessId: business.id,
+                    slotNumber: String(i + 1),
+                    status: 'available',
+                })),
+            });
+        }
+
+        return business;
     });
 };
 

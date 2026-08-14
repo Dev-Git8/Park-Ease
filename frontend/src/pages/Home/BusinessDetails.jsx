@@ -259,16 +259,16 @@ const BusinessDetails = () => {
                                             onChange={(e) => setDuration(parseInt(e.target.value))}
                                             className="mt-2 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white focus:border-ignition-light focus:outline-none"
                                         >
-                                            <option value={5}>5 minutes</option>
-                                            <option value={10}>10 minutes</option>
-                                            <option value={15}>15 minutes</option>
-                                            <option value={30}>30 minutes</option>
-                                            <option value={45}>45 minutes</option>
-                                            <option value={60}>1 hour</option>
-                                            <option value={120}>2 hours</option>
-                                            <option value={240}>4 hours</option>
-                                            <option value={480}>8 hours</option>
-                                            <option value={1440}>24 hours</option>
+                                            <option className="bg-asphalt text-white" value={5}>5 minutes</option>
+                                            <option className="bg-asphalt text-white" value={10}>10 minutes</option>
+                                            <option className="bg-asphalt text-white" value={15}>15 minutes</option>
+                                            <option className="bg-asphalt text-white" value={30}>30 minutes</option>
+                                            <option className="bg-asphalt text-white" value={45}>45 minutes</option>
+                                            <option className="bg-asphalt text-white" value={60}>1 hour</option>
+                                            <option className="bg-asphalt text-white" value={120}>2 hours</option>
+                                            <option className="bg-asphalt text-white" value={240}>4 hours</option>
+                                            <option className="bg-asphalt text-white" value={480}>8 hours</option>
+                                            <option className="bg-asphalt text-white" value={1440}>24 hours</option>
                                         </select>
                                     </label>
                                 </div>
