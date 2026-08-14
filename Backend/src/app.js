@@ -51,6 +51,7 @@ const slotsRoutes = require('./modules/slots/slots.routes');
 const bookingsRoutes = require('./modules/bookings/bookings.routes');
 const adminRoutes = require('./modules/admin/admin.routes');
 const paymentsRoutes = require('./modules/payments/payments.routes');
+const visitRequestsRoutes = require('./modules/visitRequests/visitRequests.routes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/business', businessRoutes);
@@ -58,6 +59,7 @@ app.use('/api/slots', slotsRoutes);
 app.use('/api/bookings', bookingsRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/payments', paymentsRoutes);
+app.use('/api/visit-requests', visitRequestsRoutes);
 
 // Error Handling Middleware
 app.use(errorMiddleware);
