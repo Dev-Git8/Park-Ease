@@ -58,6 +58,18 @@ const paymentVerifyLimiter = buildLimiter({
     message: 'Too many payment verification attempts. Please slow down.',
 });
 
+const visitRequestLimiter = buildLimiter({
+    windowMs: 60 * 60 * 1000,
+    max: 5,
+    message: 'Too many visit requests. Please try again later.',
+});
+
+const setPasswordLimiter = buildLimiter({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+    message: 'Too many attempts. Please try again later.',
+});
+
 module.exports = {
     loginLimiter,
     registerLimiter,
@@ -65,4 +77,6 @@ module.exports = {
     bookingCreateLimiter,
     globalLimiter,
     paymentVerifyLimiter,
+    visitRequestLimiter,
+    setPasswordLimiter,
 };
