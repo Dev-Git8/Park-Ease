@@ -16,4 +16,9 @@ const loginSchema = z.object({
     password: z.string().min(1),
 }).strict();
 
-module.exports = { registerSchema, loginSchema };
+const setPasswordSchema = z.object({
+    token: z.string().trim().min(1),
+    password: z.string().min(8).max(100),
+}).strict();
+
+module.exports = { registerSchema, loginSchema, setPasswordSchema };

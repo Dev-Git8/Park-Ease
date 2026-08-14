@@ -143,9 +143,25 @@ const logout = async (req, res, next) => {
     }
 };
 
+const setPassword = async (req, res, next) => {
+    try {
+        const { token, password } = req.body;
+        const ok = await authService.setPasswordViaToken(token, password);
+
+        if (!ok) {
+            return res.status(400).json({ success: false, message: 'This link is invalid or has expired.' });
+        }
+
+        res.status(200).json({ success: true, message: 'Password set successfully. You can now log in.' });
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     register,
     login,
     refresh,
-    logout
+    logout,
+    setPassword,
 };

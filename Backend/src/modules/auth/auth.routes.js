@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('./auth.controller');
-const { loginLimiter, registerLimiter, refreshLimiter } = require('../../middlewares/rateLimit.middleware');
+const { loginLimiter, registerLimiter, refreshLimiter, setPasswordLimiter } = require('../../middlewares/rateLimit.middleware');
 const { validate } = require('../../middlewares/validate.middleware');
-const { registerSchema, loginSchema } = require('./auth.schemas');
+const { registerSchema, loginSchema, setPasswordSchema } = require('./auth.schemas');
 
 // @route   POST api/auth/register
 // @desc    Register a new user
@@ -24,5 +24,10 @@ router.post('/refresh', refreshLimiter, authController.refresh);
 // @desc    Logout user & clear cookie
 // @access  Public
 router.post('/logout', authController.logout);
+
+// @route   POST api/auth/set-password
+// @desc    Redeem a password-setup token (from a visit-request approval email)
+// @access  Public (token-gated)
+router.post('/set-password', setPasswordLimiter, validate(setPasswordSchema), authController.setPassword);
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const prisma = require('../../config/prisma');
 const bcrypt = require('bcrypt');
+const { hashToken } = require('../../utils/token.utils');
 
 const VALID_ROLES = ['customer', 'business', 'admin'];
 
@@ -134,6 +135,24 @@ const clearAllUserSessions = async (userId) => {
     });
 };
 
+const setPasswordViaToken = async (rawToken, newPassword) => {
+    const tokenHash = hashToken(rawToken);
+    const record = await prisma.passwordSetupToken.findUnique({ where: { tokenHash } });
+
+    if (!record || record.usedAt || record.expiresAt < new Date()) {
+        return false;
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await prisma.$transaction([
+        prisma.user.update({ where: { id: record.userId }, data: { password: hashedPassword } }),
+        prisma.passwordSetupToken.update({ where: { id: record.id }, data: { usedAt: new Date() } }),
+    ]);
+
+    return true;
+};
+
 module.exports = {
     createUser,
     findUserByEmail,
@@ -143,4 +162,5 @@ module.exports = {
     rotateSession,
     deleteSession,
     clearAllUserSessions,
+    setPasswordViaToken,
 };
