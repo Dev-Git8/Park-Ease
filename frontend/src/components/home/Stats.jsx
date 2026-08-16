@@ -1,6 +1,7 @@
 import Eyebrow from '../ui/Eyebrow';
 import TextReveal, { TEXT_EASE } from '../ui/TextReveal';
 import Reveal from '../ui/Reveal';
+import CountUp from '../ui/CountUp';
 import { STATS } from '../../data/homeContent';
 
 const Stats = () => (
@@ -28,7 +29,7 @@ const Stats = () => (
                 >
                     <dt className="sr-only">{stat.label}</dt>
                     <dd>
-                        <p className="text-6xl font-medium tracking-tight sm:text-7xl">{stat.value}</p>
+                        <CountUp value={stat.value} duration={1.4 + i * 0.15} className="text-6xl font-medium tracking-tight sm:text-7xl" />
                         <p className="mt-3 text-sm text-white/65">{stat.label}</p>
                     </dd>
                 </Reveal>

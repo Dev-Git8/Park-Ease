@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import api from '../../api/api';
 import Hero from '../../components/home/Hero';
+import SearchBar from '../../components/home/SearchBar';
 import TrustCarousel from '../../components/home/TrustCarousel';
 import Services from '../../components/home/Services';
 import Listings from '../../components/home/Listings';
@@ -14,6 +16,7 @@ const Home = () => {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const { isReady } = useSiteUI();
+    const { hash } = useLocation();
 
     const fetchBusinesses = async (search = '') => {
         setLoading(true);
@@ -32,6 +35,12 @@ const Home = () => {
         fetchBusinesses();
     }, []);
 
+    useEffect(() => {
+        if (!hash) return;
+        const id = hash.slice(1);
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    }, [hash]);
+
     const handleSearch = (event) => {
         if (event) event.preventDefault();
         fetchBusinesses(searchTerm);
@@ -40,7 +49,8 @@ const Home = () => {
 
     return (
         <div className="flex flex-col gap-3 pb-3">
-            <Hero businesses={businesses} searchTerm={searchTerm} onSearchTermChange={setSearchTerm} onSearch={handleSearch} ready={isReady} />
+            <Hero businesses={businesses} ready={isReady} />
+            <SearchBar searchTerm={searchTerm} onSearchTermChange={setSearchTerm} onSearch={handleSearch} />
             <TrustCarousel />
             <Services />
             <Listings businesses={businesses} loading={loading} />

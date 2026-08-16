@@ -5,6 +5,7 @@ import { Mail, Lock, ArrowRight, Car } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
+import Reveal from '../../components/ui/Reveal';
 
 const Login = () => {
     const [formData, setFormData] = useState({ email: '', password: '' });
@@ -35,21 +36,34 @@ const Login = () => {
     };
 
     return (
-        <div className="flex flex-1 items-center justify-center bg-surface p-6">
+        <div className="relative flex flex-1 items-center justify-center overflow-hidden bg-surface p-6">
+            <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-ignition/10 blur-3xl"
+            />
+            <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-pulse/10 blur-3xl"
+            />
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="w-full max-w-md"
+                className="relative w-full max-w-md"
             >
-                <div className="mb-10 text-center">
-                    <div className="mx-auto mb-6 grid h-16 w-16 place-items-center rounded-card bg-ignition">
+                <motion.div
+                    initial={{ opacity: 0, y: 12, scale: 0.9 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ delay: 0.1, type: 'spring', stiffness: 260, damping: 20 }}
+                    className="mb-10 text-center"
+                >
+                    <div className="mx-auto mb-6 grid h-16 w-16 place-items-center rounded-card bg-ignition shadow-[0_10px_30px_-8px_rgba(255,106,43,0.55)]">
                         <Car className="h-8 w-8 text-white" aria-hidden="true" />
                     </div>
                     <h1 className="font-outfit text-4xl font-medium tracking-tight text-ink">Welcome back</h1>
                     <p className="mt-2 text-sm text-ink-soft">Sign in to manage your bookings</p>
-                </div>
+                </motion.div>
 
-                <div className="rounded-card-lg border border-hairline bg-white p-8 shadow-sm sm:p-10">
+                <div className="rounded-card-lg border border-hairline bg-white p-8 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.15)] sm:p-10">
                     {error && (
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
@@ -61,27 +75,31 @@ const Login = () => {
                     )}
 
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        <Input
-                            label="Email"
-                            name="email"
-                            type="email"
-                            required
-                            icon={Mail}
-                            value={formData.email}
-                            onChange={handleChange}
-                            placeholder="you@email.com"
-                        />
+                        <Reveal delayIn={100} preset="reveal">
+                            <Input
+                                label="Email"
+                                name="email"
+                                type="email"
+                                required
+                                icon={Mail}
+                                value={formData.email}
+                                onChange={handleChange}
+                                placeholder="you@email.com"
+                            />
+                        </Reveal>
 
-                        <Input
-                            label="Password"
-                            name="password"
-                            type="password"
-                            required
-                            icon={Lock}
-                            value={formData.password}
-                            onChange={handleChange}
-                            placeholder="••••••••"
-                        />
+                        <Reveal delayIn={180} preset="reveal">
+                            <Input
+                                label="Password"
+                                name="password"
+                                type="password"
+                                required
+                                icon={Lock}
+                                value={formData.password}
+                                onChange={handleChange}
+                                placeholder="••••••••"
+                            />
+                        </Reveal>
 
                         <Button type="submit" disabled={loading} className="w-full" size="lg">
                             {loading ? (

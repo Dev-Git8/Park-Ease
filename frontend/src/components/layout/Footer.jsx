@@ -7,6 +7,8 @@ import Reveal from '../ui/Reveal';
 import { useSiteUI } from '../../context/SiteUIContext';
 import { CONTACT_INFO, FOOTER_LINKS, SOCIAL_LINKS } from '../../data/homeContent';
 
+const LINK_CLASS = "inline-flex items-center transition-all duration-300 hover:text-white hover:translate-x-1";
+
 const FooterColumn = ({ title, links }) => (
     <nav>
         <p className="text-xs font-medium uppercase tracking-[0.2em] text-white/50">{title}</p>
@@ -14,9 +16,9 @@ const FooterColumn = ({ title, links }) => (
             {links.map((link) => (
                 <li key={link.name}>
                     {link.to ? (
-                        <Link to={link.to} className="hover:text-white">{link.name}</Link>
+                        <Link to={link.to} className={LINK_CLASS}>{link.name}</Link>
                     ) : (
-                        <a href={link.href} className="hover:text-white">{link.name}</a>
+                        <a href={link.href} className={LINK_CLASS}>{link.name}</a>
                     )}
                 </li>
             ))}
@@ -28,8 +30,12 @@ const Footer = () => {
     const { openContact } = useSiteUI();
 
     return (
-        <footer id="contact" className="mt-3 rounded-card-lg bg-asphalt px-6 py-14 text-white sm:px-10 sm:py-16">
-            <div className="flex flex-col gap-8 border-b border-white/15 pb-14 sm:flex-row sm:items-end sm:justify-between">
+        <footer id="contact" className="relative mt-3 overflow-hidden rounded-card-lg bg-asphalt px-6 py-14 text-white sm:px-10 sm:py-16">
+            <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-32 left-1/2 h-64 w-[36rem] -translate-x-1/2 rounded-full bg-ignition/25 blur-3xl"
+            />
+            <div className="relative flex flex-col gap-8 border-b border-white/15 pb-14 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                     <Eyebrow tone="light">Get started</Eyebrow>
                     <TextReveal

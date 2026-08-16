@@ -19,8 +19,8 @@ const Input = ({ label, icon: Icon, error, className = '', ...props }) => {
                         w-full bg-background border border-hairline
                         py-4 ${Icon ? 'pl-14' : 'px-6'} pr-6 rounded-2xl text-sm font-medium text-ink
                         placeholder:text-ink-soft/60
-                        focus:outline-none focus:border-ignition
-                        transition-colors duration-300
+                        focus:outline-none focus:border-ignition focus:shadow-[0_0_0_4px_rgba(255,106,43,0.12)]
+                        transition-all duration-300
                         ${error ? 'border-red-500' : ''}
                     `}
                     {...props}

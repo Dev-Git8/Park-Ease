@@ -81,8 +81,8 @@ export const TESTIMONIALS = [
 ];
 
 export const NAV_LINKS = [
-    { name: 'Find Parking', href: '#listings' },
-    { name: 'Services', href: '#services' },
+    { name: 'Find Parking', href: '/#listings' },
+    { name: 'Services', href: '/#services' },
 ];
 
 export const MENU_LINKS = [

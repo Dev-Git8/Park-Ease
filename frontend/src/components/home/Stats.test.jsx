@@ -3,13 +3,13 @@ import { render, screen } from '@testing-library/react';
 import Stats from './Stats';
 
 describe('Stats', () => {
-    it('renders all four stat values and labels', () => {
+    it('renders all four stat values and labels', async () => {
         render(<Stats />);
-        expect(screen.getByText('40+')).toBeInTheDocument();
+        expect(await screen.findByText('40+', {}, { timeout: 3000 })).toBeInTheDocument();
         expect(screen.getAllByText('Cities covered')).toHaveLength(2);
-        expect(screen.getByText('1,200+')).toBeInTheDocument();
-        expect(screen.getByText('2.4M+')).toBeInTheDocument();
-        expect(screen.getByText('8')).toBeInTheDocument();
+        expect(await screen.findByText('1,200+', {}, { timeout: 3000 })).toBeInTheDocument();
+        expect(await screen.findByText('2.4M+', {}, { timeout: 3000 })).toBeInTheDocument();
+        expect(await screen.findByText('8', {}, { timeout: 3000 })).toBeInTheDocument();
         expect(screen.getAllByText('Years on the road')).toHaveLength(2);
     });
 

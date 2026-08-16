@@ -25,6 +25,7 @@ const AdminDashboard = () => {
     const [visitRequests, setVisitRequests] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('businesses');
+    const [pendingVisitRequestId, setPendingVisitRequestId] = useState(null);
 
     const fetchData = async () => {
         try {
@@ -60,20 +61,25 @@ const AdminDashboard = () => {
         try {
             await api.put(`/admin/businesses/${id}/status`, { status });
             fetchData();
-        } catch {
-            alert('Failed to update status');
+        } catch (error) {
+            alert(error.response?.data?.message || 'Failed to update status');
         }
     };
 
     const handleVisitRequestStatusUpdate = async (id, status) => {
+        if (pendingVisitRequestId) return;
+        setPendingVisitRequestId(id);
         try {
             const res = await api.put(`/visit-requests/${id}/status`, { status });
             if (res.data.emailDelivered === false) {
                 alert('Status updated, but the notification email failed to send — let them know another way.');
             }
-            fetchData();
-        } catch {
-            alert('Failed to update visit request');
+            await fetchData();
+        } catch (error) {
+            alert(error.response?.data?.message || 'Failed to update visit request');
+            await fetchData();
+        } finally {
+            setPendingVisitRequestId(null);
         }
     };
 
@@ -290,13 +296,15 @@ const AdminDashboard = () => {
                                                     <div className="flex items-center justify-end gap-2">
                                                         <button
                                                             onClick={() => handleVisitRequestStatusUpdate(v.id, 'approved')}
-                                                            className="grid h-9 w-9 place-items-center rounded-full bg-emerald-50 text-emerald-600 hover:bg-emerald-500 hover:text-white"
+                                                            disabled={pendingVisitRequestId !== null}
+                                                            className="grid h-9 w-9 place-items-center rounded-full bg-emerald-50 text-emerald-600 hover:bg-emerald-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-emerald-50 disabled:hover:text-emerald-600"
                                                         >
                                                             <CheckCircle size={16} aria-hidden="true" />
                                                         </button>
                                                         <button
                                                             onClick={() => handleVisitRequestStatusUpdate(v.id, 'rejected')}
-                                                            className="grid h-9 w-9 place-items-center rounded-full bg-red-50 text-red-500 hover:bg-red-500 hover:text-white"
+                                                            disabled={pendingVisitRequestId !== null}
+                                                            className="grid h-9 w-9 place-items-center rounded-full bg-red-50 text-red-500 hover:bg-red-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-red-50 disabled:hover:text-red-500"
                                                         >
                                                             <XCircle size={16} aria-hidden="true" />
                                                         </button>
