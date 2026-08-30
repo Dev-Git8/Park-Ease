@@ -142,6 +142,19 @@ const BusinessDetails = () => {
         attemptPayment(pendingPayment.booking, pendingPayment.order);
     };
 
+    const handleCancelPendingPayment = async () => {
+        if (!pendingPayment) return;
+        try {
+            await api.put(`/bookings/${pendingPayment.booking.id}/cancel`);
+        } catch {
+            // Booking may have already expired/resolved server-side - fine either way.
+        } finally {
+            setPendingPayment(null);
+            setSelectedSlot(null);
+            await fetchSlots();
+        }
+    };
+
     if (loading || !business) return (
         <div className="flex min-h-screen items-center justify-center bg-surface">
             <div className="h-10 w-10 animate-spin rounded-full border-2 border-pulse/30 border-t-pulse" />
@@ -318,6 +331,18 @@ const BusinessDetails = () => {
                                         </>
                                     )}
                                 </Button>
+
+                                {pendingPayment && (
+                                    <button
+                                        type="button"
+                                        onClick={handleCancelPendingPayment}
+                                        disabled={isProcessing}
+                                        className="mt-3 flex w-full items-center justify-center gap-2 text-xs text-ink-soft hover:text-red-500"
+                                    >
+                                        <XCircle size={14} aria-hidden="true" />
+                                        Cancel and pick a different slot
+                                    </button>
+                                )}
                             </div>
 
                             <div className="flex items-start gap-3 rounded-card border border-hairline bg-white p-5">
