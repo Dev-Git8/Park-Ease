@@ -1,12 +1,7 @@
 import axios from 'axios';
 import { getAccessToken, setAccessToken, clearAccessToken } from './authStore';
 
-const API_URLs = {
-    development: 'http://localhost:5000/api',
-    production: '/api'
-};
-
-const baseURL = API_URLs[import.meta.env.MODE] || API_URLs.development;
+const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const api = axios.create({
     baseURL,
