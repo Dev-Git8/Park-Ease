@@ -59,7 +59,11 @@ const login = async (req, res, next) => {
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            // Frontend and backend are on different domains in production
+            // (e.g. onrender.com vs sslip.io), so the refresh cookie must be
+            // SameSite=None to be sent on those cross-site requests - it
+            // requires Secure, which is already true in production (HTTPS).
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
 
@@ -109,7 +113,11 @@ const refresh = async (req, res, next) => {
         res.cookie('refreshToken', newRefreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            // Frontend and backend are on different domains in production
+            // (e.g. onrender.com vs sslip.io), so the refresh cookie must be
+            // SameSite=None to be sent on those cross-site requests - it
+            // requires Secure, which is already true in production (HTTPS).
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
 
@@ -136,7 +144,11 @@ const logout = async (req, res, next) => {
             await authService.deleteSession(refreshToken);
         }
 
-        res.clearCookie('refreshToken');
+        res.clearCookie('refreshToken', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+        });
         res.status(200).json({ success: true, message: 'Logged out successfully' });
     } catch (error) {
         next(error);
