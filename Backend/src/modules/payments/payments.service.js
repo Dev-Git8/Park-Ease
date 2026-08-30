@@ -4,7 +4,24 @@ const razorpay = require('../../config/razorpay');
 const { toPaise } = require('../../utils/pricing.utils');
 const { emitSlotsUpdated, invalidateSlotsCache } = require('../../utils/realtime.utils');
 
+// Idempotency guard: if a pending order already exists for this
+// booking+purpose (e.g. this gets invoked twice for the same booking due to
+// an upstream retry), reuse it instead of creating a second Razorpay order
+// and orphaning the first one.
 const createOrder = async (booking, amount, purpose) => {
+    const existing = await prisma.payment.findFirst({
+        where: { bookingId: booking.id, purpose, status: 'pending' },
+        orderBy: { createdAt: 'desc' },
+    });
+    if (existing) {
+        return {
+            orderId: existing.providerOrderId,
+            amount: toPaise(existing.amount),
+            currency: existing.currency,
+            keyId: process.env.RAZORPAY_KEY_ID,
+        };
+    }
+
     const order = await razorpay.orders.create({
         amount: toPaise(amount),
         currency: 'INR',

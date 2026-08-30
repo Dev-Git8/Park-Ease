@@ -2,8 +2,9 @@ services:
   api:
     build: .
     container_name: parking-api
+    restart: always
     ports:
-      - "5000:5000"
+      - "127.0.0.1:5000:5000"
     env_file: .env
     depends_on:
       - db
@@ -12,12 +13,13 @@ services:
   db:
     image: postgres:15-alpine
     container_name: parking-db
+    restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root
       POSTGRES_DB: ParkingDB
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -26,7 +28,7 @@ services:
     image: redis:alpine
     container_name: parking-redis
     ports:
-      - "6379:6379"
+      - "127.0.0.1:6379:6379"
     restart: always
 
 volumes:

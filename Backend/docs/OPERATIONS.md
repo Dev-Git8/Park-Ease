@@ -32,6 +32,47 @@ and `REDIS_URL` inside the container must point at the Docker service names
 (`db`, `redis`), not `localhost` - use a container-specific `.env` for this,
 or override those two vars in `docker-compose.yml` directly.
 
+## Deploying to EC2
+
+`docker-compose.yml` already binds `api`/`db`/`redis` to `127.0.0.1` only
+(not publicly reachable - only Nginx, running on the same box, talks to
+them) and every service has `restart: always`. Files in `deploy/` build on
+top of that:
+
+- `deploy/nginx.parking-api.conf` - reverse-proxy config (handles the
+  Socket.IO WebSocket upgrade) that terminates TLS in front of the API
+  container.
+- `deploy/setup-ec2.sh` - bootstraps a fresh Ubuntu EC2 box: installs
+  Docker/Nginx/Certbot, brings up the containers, runs `prisma migrate
+  deploy`, and installs the Nginx site.
+
+Steps:
+
+1. Launch an Ubuntu 22.04 EC2 instance (t3.small or larger - Postgres +
+   Redis + Node together need more headroom than t2.micro), open ports
+   `22` (restricted to your IP), `80`, `443` in its security group. Do
+   **not** open `5432`/`6379`/`5000` publicly. Allocate an Elastic IP.
+2. `git clone` this repo onto the instance, `cd Backend`.
+3. `cp .env.example .env` and fill in real values - fresh `JWT_SECRET`/
+   `REFRESH_TOKEN_SECRET` (see "First-time setup" above), real
+   `RAZORPAY_*`/`CLOUDINARY_URL`/`SMTP_*`, and `CORS_ORIGINS`/
+   `FRONTEND_URL` set to your deployed frontend's real origin. Also change
+   `DATABASE_URL`'s host from `localhost` to `db` and `REDIS_URL`'s host
+   from `localhost` to `redis` (Docker service names).
+4. `chmod +x deploy/setup-ec2.sh && ./deploy/setup-ec2.sh`
+5. Point your domain's DNS A record at the instance's Elastic IP, edit
+   `/etc/nginx/sites-available/parking-api` to replace
+   `api.yourdomain.com` with the real domain, `sudo nginx -t &&
+   sudo systemctl reload nginx`, then `sudo certbot --nginx -d
+   api.yourdomain.com` for TLS.
+6. Create the first admin (see "Admin provisioning" below), update the
+   Razorpay dashboard's webhook URL to
+   `https://api.yourdomain.com/api/payments/webhook`, and point the
+   frontend's API base URL at the same domain.
+
+To redeploy after a code change: `git pull && sudo docker compose up -d
+--build && sudo docker compose exec api npx prisma migrate deploy`.
+
 ## Razorpay webhooks locally
 
 Razorpay doesn't have an official local-forwarding CLI. Expose the local
